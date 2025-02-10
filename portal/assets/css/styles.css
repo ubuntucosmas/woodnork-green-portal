@@ -1,0 +1,140 @@
+/* assets/css/styles.css */
+body {
+  font-family: 'poppins', sans-serif;
+  font-weight: 200;
+  background-color: #f0f0f0;
+  color: #6e6f71;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center; /* Ensure text is centered */
+}
+/* Logo container styling */
+.logo-container {
+  margin-bottom: 30px; /* Space between logo and title */
+}
+
+.company-logo {
+  width: 250px; /* Adjust logo size */
+  height: auto;
+}
+
+/* Title styling */
+h1 {
+  font-size: 32px; /* Adjust size as needed */
+  font-weight: 350;
+  color: #0badd3; /* Blue from company colors */
+  margin-bottom: 30px; /* Space between title and dashboard */
+}
+
+main {
+  width: 45%;
+  max-width: 1200px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  justify-items: center; /* Center grid items horizontally */
+  gap: 20px;
+}
+
+.dashboard-item {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  color: #333;
+}
+
+/* Optionally, style the hover state to keep it consistent */
+.dashboard-item a:hover {
+  color: inherit; /* Maintain the current text color */
+}
+
+.dashboard-item:hover {
+  transform: scale(1.05);
+}
+
+.dashboard-item img {
+  width: 50px;
+  height: 50px;
+}
+
+.dashboard-item span {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  text-decoration: none !important; /* Force remove underline */
+}
+.dashboard-item:hover {
+  background-color: #c8da30;
+  color: #ffffff;
+}
+/* Media query for screens smaller than 768px */
+@media (max-width: 768px) {
+  /* Adjust body layout */
+  body {
+    justify-content: flex-start; /* Align content to the top */
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  /* Adjust dashboard layout */
+  .dashboard {
+    gap: 10px; /* Further reduce gap between items */
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); /* Adjust columns for smaller screens */
+  }
+
+  .dashboard-item {
+    width: 80px; /* Smaller items for mobile */
+    padding: 10px; /* Less padding */
+  }
+
+  .dashboard-item img {
+    width: 30px; /* Smaller icons */
+    height: 30px;
+  }
+
+  .dashboard-item span {
+    font-size: 10px; /* Smaller font size for text */
+  }
+}
+.login-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 15%; /* Increase width */
+  max-width: 800px; /* Set a maximum width for larger screens */
+  margin: 0 auto; /* Center the container horizontally */
+}
+.form-group {
+  margin-bottom: 15px;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+}
+button {
+  background-color: #0badd3;
+  color: white;
+  border: none;
+  padding: 20px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+button:hover {
+  background-color: #c8da30; /* Another company color */
+}
+

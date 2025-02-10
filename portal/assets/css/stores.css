@@ -1,0 +1,338 @@
+.store-dashboard {
+    padding: 20px;
+    font-family: Poppins, sans-serif;
+}
+
+.store-dashboard h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.store-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.stat-box {
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.stat-box h3 {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.stat-box p {
+    font-size: 22px;
+    font-weight: bold;
+    color: #0badd3; /* Greenish color for better contrast */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .store-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+.section-title {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #333;
+    text-align: left;
+}
+
+.transactions-container {
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #2a9d8f;
+    color: white;
+}
+
+td {
+    font-size: 16px;
+}
+
+td.in {
+    color: green;
+    font-weight: bold;
+}
+
+td.out {
+    color: red;
+    font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+    th, td {
+        padding: 8px;
+    }
+}
+.filter-section {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    align-items: center;
+}
+
+.filter-section input,
+.filter-section select,
+.filter-section button {
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.filter-section button {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.filter-section button:hover {
+    background: #21867a;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+/* Stock Management Styling */
+.add-stock-btn {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+/* Responsive Table */
+.stock-container {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    max-width: 100%;
+}
+
+.stock-container table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* Ensures table remains structured on small screens */
+}
+
+.stock-container th, .stock-container td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+/* Make buttons more touch-friendly */
+.stock-container button {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    width: 40%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form Inputs */
+.modal-content label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.modal-content input, .modal-content select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Save Button */
+.modal-content button {
+    background: #2a9d8f;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Close Button */
+.close {
+    font-size: 22px;
+    font-weight: bold;
+    color: #555;
+    cursor: pointer;
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    background: none;
+    border: none;
+    z-index: 1000;
+}
+
+.close:hover {
+    color: #d9534f; /* Red color on hover */
+}
+
+.modal-content button:hover {
+    background: #21867a;
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 90%; /* Make the modal fit smaller screens */
+    }
+
+    .stock-container table {
+        min-width: 100%; /* Ensures table adapts to the container */
+    }
+
+    .filter-section {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .filter-section input, .filter-section select, .filter-section button {
+        width: 100%;
+    }
+}
+/* Loading Spinner */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+    display: block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Confirmation Message */
+.confirmation-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 2.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(10px); }
+}
+.export-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.export-buttons button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+.export-buttons button:hover {
+    background-color: #0056b3;
+}
+
+.export-buttons button:nth-child(2) {
+    background-color: #dc3545;
+}
+
+.export-buttons button:nth-child(2):hover {
+    background-color: #b02a37;
+}
