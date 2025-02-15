@@ -1,0 +1,9 @@
+Options -MultiViews
+RewriteEngine On
+
+# Ensure that requests for files and directories are not rewritten
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Allow direct access to pages/ folder
+RewriteRule ^pages/(.*)$ pages/$1 [L]
