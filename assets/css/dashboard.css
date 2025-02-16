@@ -85,7 +85,9 @@ body {
 .sidebar.collapsed .nav-menu ul {
   display: none; /* Hide the entire list */
 }
-
+.nav-menu ul {
+  padding-left: 10px ;
+}
 .sidebar a {
   color: white;
   text-decoration: none;
@@ -99,26 +101,23 @@ body {
   background-color: #c8da30;
   color: #333;
 }
-
-#sidebar-menu li.active{
-  background-color: #c8da30;
-  color: #000303;
+#sidebar-menu li.active {
+  background-color: #c8da30; /* Highlight color */
+  color: rgb(0, 0, 0);
   font-weight: bold;
   border-radius: 5px;
 }
-#sidebar-menu li.active a{
-  color: #000303;
+
+#sidebar-menu li.active a {
+  color: rgb(0, 0, 0);
 }
-
-
-
 
 /* Header Styles */
 .content-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #d8d8d8;
+  background-color: #f8f8f8;
   color: white;
   padding: 0px;
   position: relative;
@@ -156,7 +155,6 @@ body {
 
 /* Buttons */
 .logout-btn {
-  background-color: #c8da30;
   color: black;
   padding: 5px 30px;
   border: none;
@@ -164,11 +162,14 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
   text-decoration: none !important;
 }
-
-.logout-btn:hover {
-  background-color: #f50707;
-  color: white;
+.icon {
+  width: 20px;  /* Adjust size as needed */
+  height: auto;
+  margin-right: 3px; /* Adds spacing between the icon and text */
+  margin-left: 10px;
+  vertical-align: middle;
 }
+
 
 /* Main Content */
 .dashboard-main {
@@ -189,7 +190,7 @@ body {
     left: -250px; /* Start off-screen */
   }
   .sidebar.collapsed {
-    left: 0; /* Slide into view */
+    left: 15px; /* Slide into view */
   }
 
   .content {
@@ -210,9 +211,64 @@ body {
 
   .notification-item {
     margin: 10px 0;
+    cursor: pointer;
   }
 
   .dashboard-main {
     margin: 10px;
   }
+}
+/* Profile Dropdown Modal */
+.prof {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  background: #d6d1d1;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 280px;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Profile Modal Content */
+.profile-content {
+  text-align: center;
+  position: relative;
+  padding: 10px;
+}
+
+/* Close Button */
+.close-profile {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.close-profile:hover {
+  color: #d9534f; /* Light red on hover */
+}
+
+/* Profile Info */
+.profile-info p {
+  text-align: left;
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  margin: 5px;
+}
+
+/* Profile Header */
+.profile-content h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #007bff;
 }

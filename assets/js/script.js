@@ -13,6 +13,8 @@ document.querySelectorAll('.dashboard-item').forEach(item => {
     }
   })
 });
+
+
 // sidebar collapse toggle
 document.addEventListener('DOMContentLoaded', function () {
   const burgerMenu = document.querySelector('.burger-menu');
@@ -24,6 +26,64 @@ document.addEventListener('DOMContentLoaded', function () {
     content.classList.toggle('expanded');
   });
 });
+
+
+
+//function to Load searched data
+
+
+
+
+// function to load data on refresh 
+
+function loadStoreData() {
+  let item = document.getElementById("search_item").value;
+  let type = document.getElementById("filter_type").value;
+  let date = document.getElementById("filter_date").value;
+
+  // Show loading state
+  document.getElementById("total_stock").innerText = "Loading...";
+  document.getElementById("low_stock").innerText = "Loading...";
+  document.getElementById("recent_transactions").innerText = "Loading...";
+  document.getElementById("transactions_body").innerHTML = `<tr><td colspan="5">Loading...</td></tr>`;
+
+  fetch("pages/store_overview.php")
+  .then(response => response.json())
+  .then(data => {
+      document.getElementById("total_stock").innerText = data.total_stock;
+      document.getElementById("low_stock").innerText = data.low_stock;
+      document.getElementById("recent_transactions").innerText = data.recent_transactions;
+
+      let transactionsTable = document.getElementById("transactions_body");
+      transactionsTable.innerHTML = "";
+
+      if (data.transactions.length > 0) {
+          data.transactions.forEach((item, index) => {
+              transactionsTable.innerHTML += `
+                  <tr>
+                      <td>${index + 1}</td>
+                      <td>${item.item_name}</td>
+                      <td>${item.quantity}</td>
+                      <td>${item.unit_of_measure}</td>
+                      <td>${formatDate(item.created_at)}</td>
+                  </tr>`;
+          });
+      } else {
+          transactionsTable.innerHTML = `<tr><td colspan="5">No stock items found.</td></tr>`;
+      }
+  })
+  .catch(error => {
+      console.error("Error fetching store data:", error);
+      document.getElementById("transactions_body").innerHTML = `<tr><td colspan="5">Failed to load data.</td></tr>`;
+  });
+
+
+}
+// Load data on page load
+document.addEventListener("DOMContentLoaded", function () {
+  loadStoreData();
+});
+// adding event listeners to side bar links
 document.querySelectorAll('.nav-menu a').forEach(link => {
   link.addEventListener('click', function(event) {
       event.preventDefault();
@@ -33,6 +93,7 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
           .then(response => response.text())
           .then(html => {
               document.querySelector('.dashboard-main').innerHTML = html;
+              loadStoreData();
           })
           .catch(error => console.error('Error loading page:', error));
   });
@@ -40,8 +101,8 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-  const sidebarMenu = document.getElementById("sidebar-menu");
   const navLinks = document.querySelectorAll(".nav-link");
+  const dashboardMain = document.querySelector(".dashboard-main");
 
   // Function to set active menu item
   function setActiveMenu(page) {
@@ -54,18 +115,35 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Check for stored active menu
-  const storedPage = localStorage.getItem("activePage");
-  if (storedPage) {
-      setActiveMenu(storedPage);
-  }
+  // Check for stored active menu and apply it on reload
+  const storedPage = localStorage.getItem("activePage") || "pages/dashboard.php"; // Default to dashboard
+  setActiveMenu(storedPage);
+
+  // Load default page content on refresh
+  fetch(storedPage)
+      .then(response => response.text())
+      .then(html => {
+          dashboardMain.innerHTML = html;
+          loadStoreData();
+      })
+      .catch(error => console.error("Error loading page:", error));
 
   // Add click event to each nav link
   navLinks.forEach(link => {
-      link.addEventListener("click", function () {
+      link.addEventListener("click", function (event) {
+          event.preventDefault();
           const page = this.getAttribute("data-page");
-          setActiveMenu(page);
-          localStorage.setItem("activePage", page); // Save active page
+
+          // Load new content dynamically
+          fetch(page)
+              .then(response => response.text())
+              .then(html => {
+                  dashboardMain.innerHTML = html;
+                  setActiveMenu(page);
+                  localStorage.setItem("activePage", page); // Save active page
+                  loadStoreData(); // Reload store data after page load
+              })
+              .catch(error => console.error("Error loading page:", error));
       });
   });
 });

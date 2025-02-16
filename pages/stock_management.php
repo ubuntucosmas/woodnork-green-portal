@@ -20,6 +20,15 @@ $sqlStock = "SELECT stock.*, category.name AS category_name
 $stmtStock = $db->prepare($sqlStock);
 $stmtStock->execute();
 $stocks = $stmtStock->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
+// Fetch available stock items
+$stock_query = "SELECT id, name FROM stock";
+$stock_result = $db->prepare($stock_query);
+$stock_result->execute();
+$stocks_available = $stock_result->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!-------============================================================================================================== -->
@@ -28,11 +37,24 @@ $stocks = $stmtStock->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Add Stock Button -->
     <button class="add-stock-btn" onclick="openStockModal()">+ Add New Stock</button>
+        <!-- Trigger Button -->
+    <button class="btn btn-outline-success" data-toggle="modal" data-target="#updateStockModal">
+        Update Stock
+    </button>
+
 
 
     <div class="export-buttons">
-        <button onclick="exportStock('excel')">Export to Excel</button>
-        <button onclick="exportStock('pdf')">Export to PDF</button>
+        <button class="btn btn-success" onclick="window.location.href='/portal/export_stock.php'">
+            Export to Excel
+        </button>
+
+        <button class="btn btn-danger" onclick="window.location.href='/portal/export_stock_pdf.php'">
+            Export to PDF
+        </button>
+
+        
+
     </div>
 
     <div id="loadingSpinner" class="spinner" style="display: none;"></div>
@@ -76,7 +98,7 @@ $stocks = $stmtStock->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <!-- Add/Edit Stock Modal -->
-<div id="stockModal" class="modal">
+<div id="stockModal" class="Modal">
     <div class="modal-content">
         <span class="close" onclick="closeStockModal()">&times;</span>
         <h3 id="modalTitle">Add Stock</h3>
@@ -135,4 +157,47 @@ $stocks = $stmtStock->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
+<!-- Update Stock Modal -->
+<div class="modal fade" id="updateStockModal" tabindex="-1" role="dialog" aria-labelledby="updateStockModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateStockModalLabel">Update Stock Quantity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="process_update_stock.php" method="post">
+                    <div class="form-group">
+                        <label for="item">Item:</label>
+                        <select id="item" name="stock_id" required>
+                            <option value="" disabled selected>Select Item</option>
+                            <?php foreach ($stocks_available as $item): ?>
+                                <option value="<?= htmlspecialchars($item['id']) ?>">
+                                    <?= htmlspecialchars($item['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity to Add/Subtract:</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="operation">Operation:</label>
+                        <select class="form-control" id="operation" name="operation" required>
+                            <option value="add">Add</option>
+                            <option value="subtract">Subtract</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Stock</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="store.js"></script>
+

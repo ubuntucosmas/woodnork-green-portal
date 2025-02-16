@@ -4,15 +4,15 @@
     <div class="store-stats">
         <div class="stat-box">
             <h3>Total Stock Items</h3>
-            <p id="total_stock"></p>
+            <p id="total_stock"></p><p>Item(s)</p>
         </div>
         <div class="stat-box">
             <h3>Low Stock Alerts</h3>
-            <p id="low_stock"></p>
+            <p id="low_stock"></p><p>Item(s)</p>
         </div>
         <div class="stat-box">
             <h3>Recent Transactions</h3>
-            <p id="recent_transactions"></p>
+            <p id="recent_transactions"></p><p>Item(s)</p>
         </div>
     </div>
 

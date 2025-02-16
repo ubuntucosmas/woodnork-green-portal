@@ -127,12 +127,7 @@ function hideLoadingSpinner() {
 }
 
 
-// Keep checking if the stock management page is loaded
 
-
-function exportStock(type) {
-    window.location.href = `pages/export_stock.php?type=${type}`;
-}
 
 
 function exportStock(type) {
@@ -140,53 +135,12 @@ function exportStock(type) {
 }
 
 
-function loadStoreData() {
-    let item = document.getElementById("search_item").value;
-    let type = document.getElementById("filter_type").value;
-    let date = document.getElementById("filter_date").value;
-
-    // Show loading state
-    document.getElementById("total_stock").innerText = "Loading...";
-    document.getElementById("low_stock").innerText = "Loading...";
-    document.getElementById("recent_transactions").innerText = "Loading...";
-    document.getElementById("transactions_body").innerHTML = `<tr><td colspan="5">Loading...</td></tr>`;
-
-    fetch("pages/store_overview.php")
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("total_stock").innerText = data.total_stock;
-        document.getElementById("low_stock").innerText = data.low_stock;
-        document.getElementById("recent_transactions").innerText = data.recent_transactions;
-
-        let transactionsTable = document.getElementById("transactions_body");
-        transactionsTable.innerHTML = "";
-
-        if (data.transactions.length > 0) {
-            data.transactions.forEach((item, index) => {
-                transactionsTable.innerHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${item.item_name}</td>
-                        <td>${item.quantity}</td>
-                        <td>${item.unit_of_measure}</td>
-                        <td>${formatDate(item.created_at)}</td>
-                    </tr>`;
-            });
-        } else {
-            transactionsTable.innerHTML = `<tr><td colspan="5">No stock items found.</td></tr>`;
-        }
-    })
-    .catch(error => {
-        console.error("Error fetching store data:", error);
-        document.getElementById("transactions_body").innerHTML = `<tr><td colspan="5">Failed to load data.</td></tr>`;
-    });
-
-
+function exportStock(type) {
+    window.location.href = `pages/export_stock.php?type=${type}`;
 }
-// Load data on page load
-document.addEventListener("DOMContentLoaded", function () {
-    loadStoreData();
-});
+
+
+
 
 
 // Function to format date for better readability
@@ -194,6 +148,31 @@ function formatDate(dateStr) {
     let date = new Date(dateStr);
     return date.toLocaleDateString('en-GB'); // Format: DD/MM/YYYY
 }
+
+
+//closing and opening the stock allocation modal
+
+// Function to open the modal
+function openModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "flex";
+}
+
+// Function to close the modal
+function closeModal(modalId) {
+    var modal = document.getElementById(modalId);
+    modal.style.display = "none";
+}
+
+// Close the modal when the user clicks anywhere outside of it
+window.onclick = function(event) {
+    var modal = document.getElementById('dispatchModal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+
 
 
 
