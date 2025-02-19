@@ -37,7 +37,7 @@ $response['low_stock_items'] = $lowStockDetailsQuery->fetchAll(PDO::FETCH_ASSOC)
 
 // Get recent transactions (last 5 entries)
 $transactionsQuery = $db->query("
-    SELECT id, name AS item_name, category_id, description, quantity, unit_of_measure, total_price, price_per_unit, created_at
+    SELECT id, name AS item_name, category_id, description, quantity, unit_of_measure, total_price, price_per_unit, created_at, status
     FROM stock 
     ORDER BY created_at DESC 
     LIMIT 5

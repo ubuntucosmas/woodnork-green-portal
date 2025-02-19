@@ -37,9 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // function to load data on refresh 
 
 function loadStoreData() {
-  let item = document.getElementById("search_item").value;
-  let type = document.getElementById("filter_type").value;
-  let date = document.getElementById("filter_date").value;
+  // let item = document.getElementById("search_item").value;
+  // let type = document.getElementById("filter_type").value;
+  // let date = document.getElementById("filter_date").value;
 
   // Show loading state
   document.getElementById("total_stock").innerText = "Loading...";
@@ -66,6 +66,7 @@ function loadStoreData() {
                       <td>${item.quantity}</td>
                       <td>${item.unit_of_measure}</td>
                       <td>${formatDate(item.created_at)}</td>
+                      <td>${item.status}</td>
                   </tr>`;
           });
       } else {
@@ -149,3 +150,41 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+//for the search functionality
+
+function loadStock() {
+  let searchItem = document.getElementById("search_item").value.trim();
+  let filterType = document.getElementById("filter_type").value;
+  let filterDate = document.getElementById("filter_date").value;
+
+  let url = `search_filter_process.php?search_item=${encodeURIComponent(searchItem)}&filter_type=${encodeURIComponent(filterType)}&filter_date=${encodeURIComponent(filterDate)}`;
+
+  fetch(url)
+      .then(response => response.json())
+      .then(data => {
+          displayStoreData(data);
+      })
+      .catch(error => console.error("Error fetching data:", error));
+}
+
+// Function to display store data in a table (example)
+function displayStoreData(data) {
+  let tableBody = document.getElementById("storeTableBody");
+  tableBody.innerHTML = ""; // Clear previous content
+
+  if (data.length === 0) {
+      tableBody.innerHTML = "<tr><td colspan='5'>No results found</td></tr>";
+      return;
+  }
+
+  data.forEach(item => {
+      let row = `<tr>
+          <td>${item.date}</td>
+          <td>${item.item_name}</td>
+          <td>${item.type}</td>
+          <td>${item.quantity}</td>
+          <td>${item.status}</td>
+      </tr>`;
+      tableBody.innerHTML += row;
+  });
+}

@@ -73,7 +73,7 @@ $stocks_available = $stock_result->fetchAll(PDO::FETCH_ASSOC);
                     <th>Quantity</th>
                     <th>Price per Unit</th>
                     <th>Total Price</th>
-                    <th>Status</th>
+                    <!-- <th>Status</th> -->
                 </tr>
             </thead>
             <tbody id="stock_body">
@@ -89,7 +89,7 @@ $stocks_available = $stock_result->fetchAll(PDO::FETCH_ASSOC);
                         <td><?= htmlspecialchars($stock['quantity']) ?></td>
                         <td><?= htmlspecialchars($stock['price_per_unit']) ?></td>
                         <td><?= htmlspecialchars($stock['total_price']) ?></td>
-                        <td><?= htmlspecialchars($stock['status']) ?></td>
+                        <!-- <td><?= htmlspecialchars($stock['status']) ?></td> -->
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -98,7 +98,7 @@ $stocks_available = $stock_result->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <!-- Add/Edit Stock Modal -->
-<div id="stockModal" class="Modal">
+<div id="stockModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeStockModal()">&times;</span>
         <h3 id="modalTitle">Add Stock</h3>
@@ -142,14 +142,14 @@ $stocks_available = $stock_result->fetchAll(PDO::FETCH_ASSOC);
             <label for="price_per_unit">Price per Unit:</label>
             <input type="number" id="price_per_unit" name="price_per_unit" required>
 
-            <label for="total_price">Total Price:</label>
-            <input type="number" id="total_price" name="total_price" readonly>
+            <!-- <label for="total_price">Total Price:</label>
+            <input type="number" id="total_price" name="total_price" readonly> -->
 
             <label for="status">Status:</label>
             <select id="status" name="status" required>
-                <option value="available">Available</option>
-                <option value="out_of_stock">Out of Stock</option>
-                <option value="discontinued">Discontinued</option>
+                <option value="in">In</option>
+                <!-- <option value="out">Out</option> -->
+                <!-- <option value="discontinued">Discontinued</option> -->
             </select>
 
             <button type="submit">Save Stock</button>
@@ -191,12 +191,19 @@ $stocks_available = $stock_result->fetchAll(PDO::FETCH_ASSOC);
                             <option value="subtract">Subtract</option>
                         </select>
                     </div>
+
+                    <!-- Hidden input to store status dynamically -->
+                    <input type="hidden" id="status" name="status" value="in">
+
                     <button type="submit" class="btn btn-primary">Update Stock</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<!-- js for the above is in stores.js -->
+
 
 
 <script src="store.js"></script>

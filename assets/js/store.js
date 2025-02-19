@@ -67,12 +67,14 @@ document.addEventListener("DOMContentLoaded", function () {
         var stockForm = document.getElementById("stockForm");
 
         if (stockForm) {
+            console.log("Status value before submit:", document.getElementById("status").value);
+
             stockForm.addEventListener("submit", function(event) {
                 event.preventDefault();
+                
 
                 var formData = new FormData(stockForm);
-
-                console.log("Sending data:", Object.fromEntries(formData.entries())); // Debugging
+                console.log("Sending data:", Object.fromEntries(formData.entries())); // for Debugging
 
                 fetch("pages/save_stock.php", {  // Adjust the path based on your project structure
                     method: "POST",
@@ -172,7 +174,74 @@ window.onclick = function(event) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    var operationSelect = document.getElementById("operation");
+    var statusInput = document.getElementById("status");
+
+    operationSelect.addEventListener("change", function () {
+        if (operationSelect.value === "add") {
+            statusInput.value = "in";  // Stock coming in
+        } else {
+            statusInput.value = "out"; // Stock going out
+        }
+        console.log("Status set to:", statusInput.value); // Debugging
+    });
+});
 
 
+// Search and filter
 
 
+document.addEventListener("DOMContentLoaded", function () {
+     // Load initial data
+});
+
+function loadSearchData() {
+    let searchItem = document.getElementById("search_item").value.toLowerCase();
+    let filterType = document.getElementById("filter_type").value;
+    let filterDate = document.getElementById("filter_date").value;
+
+    let inventoryBody = document.getElementById("inventory_body");
+
+    fetch("pages/get_stock.php") // Adjust this path if needed
+        .then(response => response.json())
+        .then(data => {
+            // console.log("Received Data:", data); for debuging
+            if (data.success) {
+                let filteredData = data.data.filter(item => {
+                    let matchItem = item.name.toLowerCase().includes(searchItem);
+                    let matchType = filterType === "" || item.type === filterType;
+                    let matchDate = filterDate === "" || item.date === filterDate;
+                    
+                    return matchItem && matchType && matchDate;
+                });
+
+                let inventoryHTML = "";
+
+                if (filteredData.length > 0) {
+                    filteredData.forEach((item, index) => {
+                        inventoryHTML += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.date}</td>
+                                <td>${item.name}</td>
+                                <td>${item.type}</td>
+                                <td>${item.quantity}</td>
+                                <td><button class="btn btn-sm btn-danger" onclick="deleteItem(${item.id})">Delete</button></td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    inventoryHTML = "<tr><td colspan='6' class='text-center'>No matching results found</td></tr>";
+                }
+
+                inventoryBody.innerHTML = inventoryHTML;
+            } else {
+                inventoryBody.innerHTML = "<tr><td colspan='6'>No inventory data available</td></tr>";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching inventory:", error);
+            inventoryBody.innerHTML = "<tr><td colspan='6'>Failed to load inventory data</td></tr>";
+        });
+}

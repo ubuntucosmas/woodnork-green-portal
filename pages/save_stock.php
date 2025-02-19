@@ -14,11 +14,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $unit_of_measure = $_POST['unit_of_measure'];
     $price_per_unit = $_POST['price_per_unit'];
     $total_price = $quantity * $price_per_unit;
-    $status = $_POST['status'];
+    $status = isset($_POST['status']) ? trim($_POST['status']) : '';
+    // if (empty($status)) {
+    //     die("Error: Status field is missing or empty."); //for debuging
+    // }
+
 
     // Prepare the SQL statement using PDO
     $sql = "INSERT INTO stock (name, category_id, description, quantity, unit_of_measure, total_price, price_per_unit, status, created_at) 
             VALUES (:name, :category_id, :description, :quantity, :unit_of_measure, :total_price, :price_per_unit, :status, NOW())";
+    // print_r($_POST); // Debugging: Check what data is received
+    // exit; // Stop execution to view output
     
     $stmt = $db->prepare($sql);
 

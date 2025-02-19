@@ -36,12 +36,13 @@ $stock_result = $conn->query($stock_query);
                 <th>Date</th>
                 <th>Receiver</th>
                 <th>Dispatcher</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody id="dispatchTableBody">
             <?php
             // Fetch dispatched stock records
-            $dispatch_query = "SELECT d.id, s.name AS item_name, d.project, d.destination, d.quantity, d.dispatch_date, d.receiver, d.dispatcher
+            $dispatch_query = "SELECT d.id, s.name AS item_name, d.project, d.destination, d.quantity, d.dispatch_date, d.receiver, d.dispatcher, d.status
                                FROM dispatches d
                                JOIN stock s ON d.stock_id = s.id
                                ORDER BY d.dispatch_date DESC";
@@ -58,6 +59,7 @@ $stock_result = $conn->query($stock_query);
                             <td>{$row['dispatch_date']}</td>
                             <td>{$row['receiver']}</td>
                             <td>{$row['dispatcher']}</td>
+                            <td>{$row['status']}</td>
                           </tr>";
                 }
             } else {
@@ -103,6 +105,10 @@ $stock_result = $conn->query($stock_query);
 
             <label for="dispatcher">Dispatcher:</label>
             <input type="text" id="dispatcher" name="dispatcher" required>
+
+            
+            <!-- Hidden input to store status dynamically -->
+            <input type="hidden" id="status" name="status" value="out">
 
             <button type="submit" id="dispatchBtn">Dispatch</button>
         </form>

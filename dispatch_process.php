@@ -20,6 +20,7 @@ $quantity = intval($_POST['quantity']);
 $dispatch_date = $conn->real_escape_string($_POST['dispatch_date']);
 $receiver = $conn->real_escape_string($_POST['receiver']);
 $dispatcher = $conn->real_escape_string($_POST['dispatcher']);
+$status = $conn->real_escape_string($_POST['status']);
 
 // Check if the stock item exists and fetch current quantity
 $stock_query = "SELECT quantity FROM stock WHERE id = $stock_id";
@@ -35,17 +36,24 @@ if ($stock_result->num_rows > 0) {
         $update_query = "UPDATE stock SET quantity = $new_quantity WHERE id = $stock_id";
 
         if ($conn->query($update_query) === TRUE) {
-            // Insert dispatch details into the dispatch table
-            $dispatch_query = "INSERT INTO dispatches (stock_id, project, destination, quantity, dispatch_date, receiver, dispatcher)
-                               VALUES ($stock_id, '$project', '$destination', $quantity, '$dispatch_date', '$receiver', '$dispatcher')";
+            // Insert into dispatches table
+            $dispatch_query = "INSERT INTO dispatches (stock_id, project, destination, quantity, dispatch_date, receiver, dispatcher, status)
+                               VALUES ($stock_id, '$project', '$destination', $quantity, '$dispatch_date', '$receiver', '$dispatcher', '$status')";
 
             if ($conn->query($dispatch_query) === TRUE) {
-                echo "Stock dispatched successfully.";
-                header("Location: dashboard.php");
-                exit();
+                // Insert into transactions table
+                $transaction_query = "INSERT INTO transactions (stock_id, project, destination, quantity, dispatch_date, receiver, dispatcher, status)
+                                      VALUES ($stock_id, '$project', '$destination', $quantity, '$dispatch_date', '$receiver', '$dispatcher', '$status')";
 
+                if ($conn->query($transaction_query) === TRUE) {
+                    echo "Stock dispatched successfully and recorded in transactions.";
+                    header("Location: dashboard.php");
+                    exit();
+                } else {
+                    echo "Error inserting into transactions: " . $conn->error;
+                }
             } else {
-                echo "Error: " . $dispatch_query . "<br>" . $conn->error;
+                echo "Error inserting into dispatches: " . $conn->error;
             }
         } else {
             echo "Error updating stock: " . $conn->error;

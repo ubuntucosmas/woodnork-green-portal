@@ -4,15 +4,15 @@
     <div class="store-stats">
         <div class="stat-box">
             <h3>Total Stock Items</h3>
-            <p id="total_stock"></p><p>Item(s)</p>
+            <p id="total_stock"></p>
         </div>
         <div class="stat-box">
             <h3>Low Stock Alerts</h3>
-            <p id="low_stock"></p><p>Item(s)</p>
+            <p id="low_stock"></p>
         </div>
         <div class="stat-box">
             <h3>Recent Transactions</h3>
-            <p id="recent_transactions"></p><p>Item(s)</p>
+            <p id="recent_transactions"></p>
         </div>
     </div>
 
@@ -25,7 +25,7 @@
             <option value="out">OUT</option>
         </select>
         <input type="date" id="filter_date">
-        <button onclick="loadStoreData()">Apply Filters</button>
+        <button onclick="loadSearchData()">Apply Filters</button>
     </div>
 
     <!-- Recent Transactions Table -->
@@ -36,9 +36,10 @@
                 <tr>
                     <th>#</th>
                     <th>Item</th>
-                    <th>Quantity</th>
+                    <th>Stock Quantity Available </th>
                     <th>Unit of Measure</th>
                     <th>Date</th>
+                    <th>Recent Transactions Status</th>
                 </tr>
             </thead>
             <tbody id="transactions_body">
