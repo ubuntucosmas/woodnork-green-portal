@@ -1,31 +1,41 @@
 <?php
+header('Content-Type: application/json');
+
+// Database connection
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "portal_db";
 
-try {
-    // Create a PDO instance
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Set PDO to throw exceptions on error
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Check connection
+if ($conn->connect_error) {
+    die(json_encode(["success" => false, "message" => "Connection failed: " . $conn->connect_error]));
+}
 
-    // Set default fetch mode to associative array
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+// Check if ID is provided
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = intval($_GET['id']); // Sanitize ID
+
+    // Prepare SQL statement
+    $stmt = $conn->prepare("SELECT * FROM inventory WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
     
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
+    $result = $stmt->get_result();
+    $item = $result->fetch_assoc();
 
-$id = $_GET['id'];
-$query = $pdo->prepare("SELECT * FROM inventory WHERE id = ?");
-$query->execute([$id]);
+    if ($item) {
+        echo json_encode(["success" => true, "data" => $item]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Item not found"]);
+    }
 
-$item = $query->fetch(PDO::FETCH_ASSOC);
-if ($item) {
-    echo json_encode(["success" => true, "data" => $item]);
+    $stmt->close();
 } else {
-    echo json_encode(["success" => false, "message" => "Item not found"]);
+    echo json_encode(["success" => false, "message" => "Invalid or missing ID"]);
 }
+
+$conn->close();
 ?>

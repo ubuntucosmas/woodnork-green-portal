@@ -45,6 +45,8 @@
             <div class="modal-body p-4">
                 <form id="inventoryForm" onsubmit="submitInventory(event)">
                     <div class="row g-3">
+                        <input type="hidden" id="inventory_id" name="inventory_id">
+
                         <div class="col-md-6">
                             <label for="date" class="form-label fw-semibold">
                                 <span class="icon"></span> Date:

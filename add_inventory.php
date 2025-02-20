@@ -16,6 +16,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id = $_POST["id"] ?? ''; // Get the inventory ID
     $date = $_POST["date"] ?? '';
     $make = $_POST["make"] ?? '';
     $model = $_POST["model"] ?? '';
@@ -30,14 +31,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $stmt = $conn->prepare("INSERT INTO inventory (date, make, model, serial, specs, user, cost, cond) 
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssss", $date, $make, $model, $serial, $specs, $user, $cost, $condition);
+    if (!empty($id)) {
+        // Update existing inventory item
+        $stmt = $conn->prepare("UPDATE inventory SET date=?, make=?, model=?, serial=?, specs=?, user=?, cost=?, cond=? WHERE id=?");
+        $stmt->bind_param("ssssssssi", $date, $make, $model, $serial, $specs, $user, $cost, $condition, $id);
+        $operation = "updated";
+    } else {
+        // Insert new inventory item
+        $stmt = $conn->prepare("INSERT INTO inventory (date, make, model, serial, specs, user, cost, cond) 
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssss", $date, $make, $model, $serial, $specs, $user, $cost, $condition);
+        $operation = "added";
+    }
 
     if ($stmt->execute()) {
-        echo json_encode(["status" => "success", "message" => "Inventory added successfully"]);
+        echo json_encode(["status" => "success", "message" => "Inventory item $operation successfully"]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Failed to add inventory"]);
+        echo json_encode(["status" => "error", "message" => "Failed to save inventory"]);
     }
 
     $stmt->close();
