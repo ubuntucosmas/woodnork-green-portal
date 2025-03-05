@@ -34,7 +34,7 @@ function submitInventory(event) {
 
 // Loading data from inventory table to the inventory table on the frontend
 document.addEventListener("DOMContentLoaded", function () {
-    loadInventory();
+    setInterval(loadInventory, 1600);
 });
 
 function loadInventory() {
