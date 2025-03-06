@@ -1,6 +1,6 @@
 <?php
 // Include database connection
-include_once(__DIR__ . "/../includes/db.php");
+include "../../../includes/db.php";
 
 // Get database instance
 $db = Database::getInstance()->getConnection();

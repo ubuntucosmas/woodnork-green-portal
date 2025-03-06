@@ -10,23 +10,23 @@
         ?>
 
         <?php if ($role === 'store_manager'): ?>
-          <li><a href="#" class="nav-link" data-page="pages/store_dashboard.php">
+          <li><a href="#" class="nav-link" data-page="pages/stores/store_dashboard.php">
              <img src="assets/images/dashboard.png" > Dashboard
               </a></li>
 
-          <li><a href="#" class="nav-link" data-page="pages/inventory.php">
+          <li><a href="#" class="nav-link" data-page="pages/stores/inventory.php">
               <img src= "assets/images/inventory.png"> Manage Inventory
               </a></li>
 
-          <li><a href="#" class="nav-link" data-page="pages/stock_management.php">
+          <li><a href="#" class="nav-link" data-page="pages/stores/stock_management.php">
             <img src="assets/images/stores.png"> Manage Stock
               </a></li>
 
-          <li><a href="#" class="nav-link" data-page="pages/stock_allocation.php">
+          <li><a href="#" class="nav-link" data-page="pages/stores/stock_allocation.php">
           <img src="assets/images/allocate.png"> Stock Allocation
           </a></li>
 
-          <li><a href="#" class="nav-link" data-page="pages/store_report.php">
+          <li><a href="#" class="nav-link" data-page="pages/stores/store_report.php">
           <img src="assets/images/report.png"> Reports
           </a></li>
 

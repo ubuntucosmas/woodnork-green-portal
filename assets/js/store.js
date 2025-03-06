@@ -52,7 +52,7 @@ function editStock(id, name, quantity, category) {
 
 function deleteStock(id) {
     if (confirm("Are you sure you want to delete this stock item?")) {
-        fetch(`pages/delete_stock.php?id=${id}`, { method: 'DELETE' })
+        fetch(`pages/stores/store-actions/delete_stock.php?id=${id}`, { method: 'DELETE' })
             .then(response => response.json())
             .then(data => {
                 alert(data.message);
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var formData = new FormData(stockForm);
                 console.log("Sending data:", Object.fromEntries(formData.entries())); // for Debugging
 
-                fetch("pages/save_stock.php", {  // Adjust the path based on your project structure
+                fetch("pages/stores/store-actions/save_stock.php", {  // Adjust the path based on your project structure
                     method: "POST",
                     body: formData
                 })
@@ -133,12 +133,12 @@ function hideLoadingSpinner() {
 
 
 function exportStock(type) {
-    window.location.href = `pages/export_stock.php?type=${type}`;
+    window.location.href = `pages/stores/store-actions/export_stock.php?type=${type}`;
 }
 
 
 function exportStock(type) {
-    window.location.href = `pages/export_stock.php?type=${type}`;
+    window.location.href = `pages/stores/store-actions/export_stock.php?type=${type}`;
 }
 
 
@@ -203,7 +203,7 @@ function loadSearchData() {
 
     let inventoryBody = document.getElementById("inventory_body");
 
-    fetch("pages/get_stock.php") // Adjust this path if needed
+    fetch("pages/stores/store-actions/get_stock.php") // Adjust this path if needed
         .then(response => response.json())
         .then(data => {
             // console.log("Received Data:", data); for debuging
@@ -245,3 +245,38 @@ function loadSearchData() {
             inventoryBody.innerHTML = "<tr><td colspan='6'>Failed to load inventory data</td></tr>";
         });
 }
+
+// for fetching low stock data
+$(document).ready(function () {
+    $("#lowStock").click(function () {
+        // Fetch data from the PHP script
+        $.ajax({
+            url: "fetch_low_stock.php", // The PHP script to get low stock data
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                var tableBody = $("#lowStockTableBody");
+                tableBody.empty(); // Clear previous data
+
+                if (data.length > 0) {
+                    data.forEach(function (item) {
+                        var row = "<tr>" +
+                            "<td>" + item.name + "</td>" +
+                            "<td>" + item.category + "</td>" +
+                            "<td>" + item.quantity + "</td>" +
+                            "<td>" + item.reorder_level + "</td>" +
+                            "</tr>";
+                        tableBody.append(row);
+                    });
+                } else {
+                    tableBody.append("<tr><td colspan='4' class='text-center'>No low stock items found.</td></tr>");
+                }
+
+                $("#lowStockModal").modal("show"); // Show the modal
+            },
+            error: function () {
+                alert("Error fetching low stock data.");
+            }
+        });
+    });
+});

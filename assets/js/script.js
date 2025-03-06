@@ -29,11 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-//function to Load searched data
-
-
-
-
 // function to load data on refresh 
 
 function loadStoreData() {
@@ -47,7 +42,7 @@ function loadStoreData() {
   document.getElementById("recent_transactions").innerText = "Loading...";
   document.getElementById("transactions_body").innerHTML = `<tr><td colspan="5">Loading...</td></tr>`;
 
-  fetch("pages/store_overview.php")
+  fetch("pages/stores/store-actions/store_overview.php")
   .then(response => response.json())
   .then(data => {
       document.getElementById("total_stock").innerText = data.total_stock;

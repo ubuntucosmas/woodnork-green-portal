@@ -7,7 +7,7 @@ function submitInventory(event) {
     let formData = new FormData(document.getElementById("inventoryForm"));
 
     // Send data to PHP using AJAX
-    fetch("submit_inventory.php", {
+    fetch("pages/stores/store-actions/submit_inventory.php", {
         method: "POST",
         body: formData
     })
@@ -34,11 +34,11 @@ function submitInventory(event) {
 
 // Loading data from inventory table to the inventory table on the frontend
 document.addEventListener("DOMContentLoaded", function () {
-    setInterval(loadInventory, 1600);
+    // setInterval(loadInventory, 1600);
 });
 
 function loadInventory() {
-    fetch("fetch_inventory.php")
+    fetch("portal/pages/stores/store-actions/fetch_inventory.php")
         .then(response => response.json())
         .then(data => {
             console.log("Received Data:", data);
@@ -83,7 +83,7 @@ function loadInventory() {
 function editInventory(id) {
     console.log("Edit button clicked for ID:", id); // Debugging
 
-    fetch(`edit_inventory.php?id=${id}`)
+    fetch(`pages/stores/store-actions/edit_inventory.php?id=${id}`)
         .then(response => response.json())
         .then(data => {
             console.log("Received Data:", data); // Debugging
@@ -126,7 +126,7 @@ document.getElementById("inventoryForm").addEventListener("submit", function (e)
     const inventoryId = document.getElementById("inventory_id").value;
     const formData = new FormData(document.getElementById("inventoryForm"));
 
-    let url = inventoryId ? `edit_inventory.php?id=${inventoryId}` : "add_inventory.php";
+    let url = inventoryId ? `pages/stores/store-actions/edit_inventory.php?id=${inventoryId}` : "add_inventory.php";
     let method = inventoryId ? "PUT" : "POST";
 
     fetch(url, {
@@ -155,7 +155,7 @@ document.getElementById("inventoryForm").addEventListener("submit", function (e)
 // Function to handle deleting an inventory item
 function deleteInventory(id) {
     if (confirm("Are you sure you want to delete this inventory item?")) {
-        fetch(`delete_inventory.php?id=${id}`, { method: "DELETE" })
+        fetch(`pages/stores/store-actions/delete_inventory.php?id=${id}`, { method: "DELETE" })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {

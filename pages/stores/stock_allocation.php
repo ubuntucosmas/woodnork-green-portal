@@ -75,7 +75,7 @@ $stock_result = $conn->query($stock_query);
     <div class="dispatch-content">
         <span class="close" onclick="closeModal('dispatchModal')">&times;</span>
         <h2>Dispatch Stock</h2>
-        <form id="dispatchForm" action="dispatch_process.php" method="post">
+        <form id="dispatchForm" action="pages/stores/store-actions/dispatch_process.php" method="post">
             <label for="item">Item:</label>
             <select id="item" name="stock_id" required>
                 <option value="" disabled selected>Select Item</option>

@@ -15,19 +15,34 @@ $role = $_SESSION['role'] ?? 'User';
 $roleDefaultPages = [
     'admin' => 'admin_dash.php',
     'procurement' => 'procurement_dash.php',
-    'store' => 'stock_dash.php' // Store department default
+    'store' => 'stores/stock_dash.php' // Store department default
 ];
 
 // Set the default page based on the role
-$defaultPage = $roleDefaultPages[$role] ?? 'store_dashboard.php';
+$defaultPage = $roleDefaultPages[$role] ?? 'pages/stores/store_dashboard.php';
 
-// Check if a specific page is requested, otherwise load default
-if (isset($_GET['page']) && file_exists("pages/{$_GET['page']}")) {
-    $_SESSION['last_page'] = $_GET['page']; // Store last visited page in session
-} 
+// Sanitize and validate requested page
+$page = $_GET['page'] ?? $defaultPage;
 
-$page = $_SESSION['last_page'] ?? $defaultPage;
+// Prevent directory traversal attacks
+$page = str_replace(array("../", "..\\"), "", $page);
 
+// Allow only valid department pages
+$allowedDepartments = ['stores', 'procurement', 'finance', 'admin'];
+$pathParts = explode("/", $page);
+$folder = $pathParts[0] ?? ''; // Department
+$file = $pathParts[1] ?? ''; // Requested file
+
+if (in_array($folder, $allowedDepartments) && file_exists("pages/$folder/$file.php")) {
+    $_SESSION['last_page'] = "$folder/$file.php"; // Store last visited page
+} else {
+    $_SESSION['last_page'] = $defaultPage; // Reset to default if invalid
+}
+
+$pageToLoad = $_SESSION['last_page'];
+
+// Ensure the requested page exists before including it
+$moduleFile = "modules/" . strtolower($department) . "_module.php";
 ?>
 
 <!DOCTYPE html>
@@ -41,12 +56,33 @@ $page = $_SESSION['last_page'] ?? $defaultPage;
   <link rel="stylesheet" href="assets/css/stores.css">
   <link rel="stylesheet" href="assets/css/report.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
-   <!-- Bootstrap CSS -->
-   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  
+<!-- style for store dash preview -->
+  <style>
+        .store-stats {
+            display: flex;
+            gap: 20px;
+        }
+        .stat-box {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            transition: 0.3s;
+        }
+        .stat-box:hover {
+            background-color: #e9ecef;
+        }
+    </style>
 </head>
 <body>
 
@@ -60,66 +96,29 @@ $page = $_SESSION['last_page'] ?? $defaultPage;
 
     <div class="dashboard-main">
       <?php
-      $moduleFile = 'modules/' . strtolower($department) . '_module.php';
-
-      // Ensure the requested page exists before loading it
-      if (file_exists("pages/$page")) {
-        include "pages/$page";
-    } elseif (file_exists($moduleFile)) {
-        include $moduleFile;
-    } else {
-        $_SESSION['last_page'] = $defaultPage; // Reset to default if page doesn't exist
-        include "pages/$defaultPage"; // Load default instead of error
-    }
-    
+      if (file_exists("pages/$pageToLoad")) {
+          include "pages/$pageToLoad";
+      } elseif (file_exists($moduleFile)) {
+          include $moduleFile;
+      } else {
+          echo "<h3>Page not found!</h3>";
+          include "pages/$defaultPage";
+      }
       ?>
     </div>
   </div>
 </div>
-<script>
-  
-document.addEventListener("DOMContentLoaded", function () {
-    const modal = document.getElementById("dispatchModal");
-    const closeBtn = document.querySelector(".close");
-    const dispatchBtn = document.getElementById("dispatchBtn");
-    const dispatchForm = document.getElementById("dispatchForm");
 
-    // Function to open modal
-    function openModal() {
-        modal.style.display = "flex";
-    }
-
-    // Dispatch modal closing function
-function closeDispatchModal() {
-    let modal = document.getElementById("dispatchModal");
-    if (modal) {
-        modal.style.animation = "fadeOut 0.3s ease-in-out"; // Add fade-out animation
-        setTimeout(() => {
-            modal.style.display = "none"; // Hide modal after animation
-        }, 300);
-    }
-}
-
-if (closeBtn) {
-    closeBtn.addEventListener("click", closeDispatchModal);
-}
-// Close modal when clicking outside the modal content
-window.addEventListener("click", function (event) {
-    if (event.target === modal) {
-        closeDispatchModal();
-    }
-
-  });
-});
-</script>
- <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/script.js" defer></script>
 <script src="assets/js/store.js" defer></script>
 <script src="assets/js/inventory.js" defer></script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

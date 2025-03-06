@@ -1,6 +1,6 @@
 <?php
 // Include database connection
-include "../includes/db.php";
+include "../../includes/db.php";
 
 // Get database instance
 $db = Database::getInstance()->getConnection();
@@ -45,11 +45,11 @@ $stocks_available = $stock_result->fetchAll(PDO::FETCH_ASSOC);
 
 
     <div class="export-buttons">
-        <button class="btn btn-success" onclick="window.location.href='/portal/export_stock.php'">
+        <button class="btn btn-success" onclick="window.location.href='/portal/pages/stores/store-actions/export_stock.php'">
             Export to Excel
         </button>
 
-        <button class="btn btn-danger" onclick="window.location.href='/portal/export_stock_pdf.php'">
+        <button class="btn btn-danger" onclick="window.location.href='/portal/pages/stores/store-actions/export_stock_pdf.php'">
             Export to PDF
         </button>
 
@@ -168,7 +168,7 @@ $stocks_available = $stock_result->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </div>
             <div class="modal-body">
-                <form action="process_update_stock.php" method="post">
+                <form action="pages/stores/store-actions/process_update_stock.php" method="post">
                     <div class="form-group">
                         <label for="item">Item:</label>
                         <select id="item" name="stock_id" required>
