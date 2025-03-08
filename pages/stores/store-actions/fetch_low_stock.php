@@ -1,29 +1,58 @@
 <?php
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "portal_db";
+// Include database connection
+include "../../../includes/db.php";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$db = Database::getInstance()->getConnection();
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-// Fetch inventory data
-$query = "SELECT id, date, make, model, serial, specs, user, cost, cond FROM inventory ORDER BY date DESC";
-$result = $conn->query($query);
-
-$inventory = [];
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $inventory[] = $row;
-    }
+if (!$db) {
+    die(json_encode(["error" => "Database connection not found."]));
 }
 
-echo json_encode(["success" => true, "data" => $inventory]);
+$response = [
+    'total_stock' => 0,
+    'low_stock' => 0,
+    'low_stock_items' => [],
+    'recent_transactions' => 0,
+    'transactions' => []
+];
 
-$conn->close();
+// Get total stock count
+$totalStockQuery = $db->query("SELECT COUNT(*) AS total FROM stock");
+if ($row = $totalStockQuery->fetch(PDO::FETCH_ASSOC)) {
+    $response['total_stock'] = $row['total'];
+}
+
+// Get low stock count (items with quantity < 10)
+$lowStockQuery = $db->query("SELECT COUNT(*) AS low FROM stock WHERE quantity < 10");
+if ($row = $lowStockQuery->fetch(PDO::FETCH_ASSOC)) {
+    $response['low_stock'] = $row['low'];
+}
+
+// Get low stock details (items with quantity < 3)
+$lowStockDetailsQuery = $db->query("
+    SELECT id, name AS item_name, category_id, description, quantity, unit_of_measure, 
+           price_per_unit, total_price, status, created_at 
+    FROM stock 
+    WHERE quantity < 3
+");
+$response['low_stock_items'] = $lowStockDetailsQuery->fetchAll(PDO::FETCH_ASSOC);
+
+// Get recent transactions (last 5 entries)
+$transactionsQuery = $db->query("
+    SELECT id, name AS item_name, category_id, description, quantity, unit_of_measure, 
+           total_price, price_per_unit, created_at, status
+    FROM stock 
+    ORDER BY created_at DESC 
+    LIMIT 5
+");
+
+while ($row = $transactionsQuery->fetch(PDO::FETCH_ASSOC)) {
+    $response['transactions'][] = $row;
+}
+
+$response['recent_transactions'] = count($response['transactions']);
+
+// Return JSON response
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

@@ -1,14 +1,14 @@
 <?php
 // Include database connection
-include "../includes/db.php";
+include "../../../includes/db.php";
 
 // Check if the request is a POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $db = Database::getInstance()->getConnection();
 
     // Retrieve form data
-    $name = $_POST['item_name'];
-    $category_id = $_POST['category'];
+    $name = $_POST['name'];
+    $category_id = $_POST['category_id'];
     $description = $_POST['description'];
     $quantity = $_POST['quantity'];
     $unit_of_measure = $_POST['unit_of_measure'];

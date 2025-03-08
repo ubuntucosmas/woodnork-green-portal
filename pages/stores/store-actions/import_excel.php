@@ -1,5 +1,5 @@
 <?php
-require 'vendor/autoload.php';  // Load PhpSpreadsheet library
+require __DIR__ . '/../../../vendor/autoload.php';  // Load PhpSpreadsheet library
 include "../includes/db.php"; // Database connection
 
 

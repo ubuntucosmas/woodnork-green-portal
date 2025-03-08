@@ -1,5 +1,5 @@
 <?php
-require 'vendor/autoload.php'; // If using Composer: require 'vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php'; // If using Composer: require 'vendor/autoload.php';
 
 // Database connection
 // Database connection

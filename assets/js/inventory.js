@@ -34,11 +34,11 @@ function submitInventory(event) {
 
 // Loading data from inventory table to the inventory table on the frontend
 document.addEventListener("DOMContentLoaded", function () {
-    // setInterval(loadInventory, 1600);
+    setInterval(loadInventory, 1600);
 });
 
 function loadInventory() {
-    fetch("portal/pages/stores/store-actions/fetch_inventory.php")
+    fetch("pages/stores/store-actions/fetch_inventory.php")
         .then(response => response.json())
         .then(data => {
             console.log("Received Data:", data);

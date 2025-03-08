@@ -50,7 +50,7 @@ if ($result->num_rows > 0) {
 
         if ($stmt->execute()) {
             echo "Stock updated and recorded in transactions successfully.";
-            header("Location: dashboard.php");
+            header("Location: http://localhost/woodnork-green-portal/dashboard.php?page=stock_management");
             exit();
         } else {
             echo "Error inserting into transactions: " . $conn->error;

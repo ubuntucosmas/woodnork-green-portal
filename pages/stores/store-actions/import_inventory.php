@@ -1,5 +1,6 @@
 <?php
-require 'vendor/autoload.php'; // Include PhpSpreadsheet
+require __DIR__ . '/../../../vendor/autoload.php';
+// Include PhpSpreadsheet
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 // Database Connection

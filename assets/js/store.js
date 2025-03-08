@@ -192,91 +192,98 @@ document.addEventListener("DOMContentLoaded", function () {
 // Search and filter
 
 
-document.addEventListener("DOMContentLoaded", function () {
-     // Load initial data
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//      // Load initial data
+// });
 
-function loadSearchData() {
-    let searchItem = document.getElementById("search_item").value.toLowerCase();
-    let filterType = document.getElementById("filter_type").value;
-    let filterDate = document.getElementById("filter_date").value;
+// function loadSearchData() {
+//     let searchItem = document.getElementById("search_item").value.toLowerCase();
+//     let filterType = document.getElementById("filter_type").value;
+//     let filterDate = document.getElementById("filter_date").value;
 
-    let inventoryBody = document.getElementById("inventory_body");
+//     let inventoryBody = document.getElementById("inventory_body");
 
-    fetch("pages/stores/store-actions/get_stock.php") // Adjust this path if needed
-        .then(response => response.json())
-        .then(data => {
-            // console.log("Received Data:", data); for debuging
-            if (data.success) {
-                let filteredData = data.data.filter(item => {
-                    let matchItem = item.name.toLowerCase().includes(searchItem);
-                    let matchType = filterType === "" || item.type === filterType;
-                    let matchDate = filterDate === "" || item.date === filterDate;
+//     fetch("pages/stores/store-actions/get_stock.php") // Adjust this path if needed
+//         .then(response => response.json())
+//         .then(data => {
+//             // console.log("Received Data:", data); for debuging
+//             if (data.success) {
+//                 let filteredData = data.data.filter(item => {
+//                     let matchItem = item.name.toLowerCase().includes(searchItem);
+//                     let matchType = filterType === "" || item.type === filterType;
+//                     let matchDate = filterDate === "" || item.date === filterDate;
                     
-                    return matchItem && matchType && matchDate;
-                });
+//                     return matchItem && matchType && matchDate;
+//                 });
 
-                let inventoryHTML = "";
+//                 let inventoryHTML = "";
 
-                if (filteredData.length > 0) {
-                    filteredData.forEach((item, index) => {
-                        inventoryHTML += `
+//                 if (filteredData.length > 0) {
+//                     filteredData.forEach((item, index) => {
+//                         inventoryHTML += `
+//                             <tr>
+//                                 <td>${index + 1}</td>
+//                                 <td>${item.date}</td>
+//                                 <td>${item.name}</td>
+//                                 <td>${item.type}</td>
+//                                 <td>${item.quantity}</td>
+//                                 <td><button class="btn btn-sm btn-danger" onclick="deleteItem(${item.id})">Delete</button></td>
+//                             </tr>
+//                         `;
+//                     });
+//                 } else {
+//                     inventoryHTML = "<tr><td colspan='6' class='text-center'>No matching results found</td></tr>";
+//                 }
+
+//                 inventoryBody.innerHTML = inventoryHTML;
+//             } else {
+//                 inventoryBody.innerHTML = "<tr><td colspan='6'>No inventory data available</td></tr>";
+//             }
+//         })
+//         .catch(error => {
+//             console.error("Error fetching inventory:", error);
+//             inventoryBody.innerHTML = "<tr><td colspan='6'>Failed to load inventory data</td></tr>";
+//         });
+// }
+
+
+
+// for fetching low stock data
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("lowStockTrigger").addEventListener("click", function () {
+        fetch("pages/stores/store-actions/fetch_low_stock.php") // Replace with actual PHP file path
+            .then(response => response.json())
+            .then(data => {
+                console.log("Received Data:", data); //for debuging
+                let tableBody = document.getElementById("lowStockTableBody");
+                tableBody.innerHTML = ""; // Clear previous data
+
+                if (data.low_stock_items.length > 0) {
+                    data.low_stock_items.forEach(item => {
+                        tableBody.innerHTML += `
                             <tr>
-                                <td>${index + 1}</td>
-                                <td>${item.date}</td>
-                                <td>${item.name}</td>
-                                <td>${item.type}</td>
+                                <td>${item.id}</td>
+                                <td>${item.item_name}</td>
+                                <td>${item.category_id}</td>
+                                <td>${item.description}</td>
                                 <td>${item.quantity}</td>
-                                <td><button class="btn btn-sm btn-danger" onclick="deleteItem(${item.id})">Delete</button></td>
+                                <td>${item.unit_of_measure}</td>
+                                <td>${item.price_per_unit}</td>
+                                <td>${item.total_price}</td>
+                                <td>${item.status}</td>
+                                <td>${item.created_at}</td>
                             </tr>
                         `;
                     });
+
+                    // Show the Bootstrap modal
+                    new bootstrap.Modal(document.getElementById("lowStockModal")).show();
                 } else {
-                    inventoryHTML = "<tr><td colspan='6' class='text-center'>No matching results found</td></tr>";
+                    alert("No low stock items found.");
                 }
-
-                inventoryBody.innerHTML = inventoryHTML;
-            } else {
-                inventoryBody.innerHTML = "<tr><td colspan='6'>No inventory data available</td></tr>";
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching inventory:", error);
-            inventoryBody.innerHTML = "<tr><td colspan='6'>Failed to load inventory data</td></tr>";
-        });
-}
-
-// for fetching low stock data
-$(document).ready(function () {
-    $("#lowStock").click(function () {
-        // Fetch data from the PHP script
-        $.ajax({
-            url: "fetch_low_stock.php", // The PHP script to get low stock data
-            method: "GET",
-            dataType: "json",
-            success: function (data) {
-                var tableBody = $("#lowStockTableBody");
-                tableBody.empty(); // Clear previous data
-
-                if (data.length > 0) {
-                    data.forEach(function (item) {
-                        var row = "<tr>" +
-                            "<td>" + item.name + "</td>" +
-                            "<td>" + item.category + "</td>" +
-                            "<td>" + item.quantity + "</td>" +
-                            "<td>" + item.reorder_level + "</td>" +
-                            "</tr>";
-                        tableBody.append(row);
-                    });
-                } else {
-                    tableBody.append("<tr><td colspan='4' class='text-center'>No low stock items found.</td></tr>");
-                }
-
-                $("#lowStockModal").modal("show"); // Show the modal
-            },
-            error: function () {
-                alert("Error fetching low stock data.");
-            }
-        });
+            })
+            .catch(error => console.error("Error fetching low stock data:", error));
     });
 });
+
+
