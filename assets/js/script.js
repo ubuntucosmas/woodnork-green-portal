@@ -201,14 +201,6 @@ document.addEventListener("DOMContentLoaded", function () {
           loadStockdata();
           lastLoadedPage = "Stock Management";
       }
-
-      // ✅ Inventory Page
-      else if (currentPage.includes("Inventory") && lastLoadedPage !== "Inventory") {
-          console.log("Inventory page detected. Loading inventory data...");
-          loadInventory();l
-          lastLoadedPage = "Inventory";
-      }
-
       // ✅ Store Page
       else if (currentPage.includes("Store Dashboard") && lastLoadedPage !== "Store Dashboard") {
           console.log("Store Dashboard detected. Loading store data...");
