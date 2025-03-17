@@ -145,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+
 //for the search functionality
 
 function loadStock() {
@@ -183,3 +184,62 @@ function displayStoreData(data) {
       tableBody.innerHTML += row;
   });
 }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("Dashboard loaded. Watching for page changes...");
+
+  let lastLoadedPage = "";
+
+  // 🔄 Define functions to run when specific pages are loaded
+  function checkAndLoadPageData() {
+      let currentPage = document.querySelector(".dashboard-main").innerHTML;
+
+      // ✅ Stock Management Page
+      if (currentPage.includes("Stock Management") && lastLoadedPage !== "Stock Management") {
+          console.log("Stock Management page detected. Loading stock data...");
+          loadStockdata();
+          lastLoadedPage = "Stock Management";
+      }
+
+      // ✅ Inventory Page
+      else if (currentPage.includes("Inventory") && lastLoadedPage !== "Inventory") {
+          console.log("Inventory page detected. Loading inventory data...");
+          loadInventory();l
+          lastLoadedPage = "Inventory";
+      }
+
+      // ✅ Store Page
+      else if (currentPage.includes("Store Dashboard") && lastLoadedPage !== "Store Dashboard") {
+          console.log("Store Dashboard detected. Loading store data...");
+          loadStoreData();
+          lastLoadedPage = "Store Dashboard";
+      }
+
+      // ✅ Procurement Page
+      else if (currentPage.includes("Procurement") && lastLoadedPage !== "Procurement") {
+          console.log("Procurement page detected. Loading procurement data...");
+          loadProcurementData();
+          lastLoadedPage = "Procurement";
+      }
+
+      // ✅ Reset if the user navigates to a different page
+      else if (!currentPage.includes(lastLoadedPage)) {
+          lastLoadedPage = "";
+      }
+  }
+
+  // ✅ Run check when the dashboard first loads
+  checkAndLoadPageData();
+
+  // ✅ Monitor AJAX page loads inside the dashboard
+  const observer = new MutationObserver(checkAndLoadPageData);
+  observer.observe(document.querySelector(".dashboard-main"), {
+      childList: true, // Detects new content in .dashboard-main
+      subtree: true
+  });
+});
+
+
+
+

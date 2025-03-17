@@ -1,4 +1,5 @@
 <?php
+
 // Include database connection
 include "../../includes/db.php";
 
@@ -34,87 +35,67 @@ $stockItems = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
         <h2 class="text-center">Stock Management</h2>
         
         <div class="d-flex justify-content-between my-3">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#stockModal">+ Add New Stock</button>
-            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#updateStockModal">Update Stock</button>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#stockModal">Update Stock</button>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">+ Add Stock Category</button>
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#stockModal">+ Add New Stock</button>
+            </div>
         </div>
-
-        <div class="d-flex gap-2">
-            <button class="btn btn-success" onclick="window.location.href='pages/stores/store-actions/export_stock.php'">Export to Excel</button>
-            <button class="btn btn-danger" onclick="window.location.href='pages/stores/store-actions/export_stock_pdf.php'">Export to PDF</button>
+        <div class="d-flex justify-content-end gap-2">
+            <button class="btn btn-outline-success" onclick="window.location.href='pages/stores/store-actions/export_stock.php'">Export to Excel</button>
+            <button class="btn btn-outline-danger" onclick="window.location.href='pages/stores/store-actions/export_stock_pdf.php'">Export to PDF</button>
         </div>
-        
         <div class="table-responsive mt-3">
-            <table class="table table-striped table-hover">
-                <thead class="table-grey">
-                    <tr>
-                        <th>#</th>
-                        <th>DATE</th>
-                        <th>ITEM NAME</th>
-                        <th>CATEGORY</th>
-                        <th>DESCRIPTION</th>
-                        <th>UoM</th>
-                        <th>QUANTITY</th>
-                        <th>PRICE/UNIT</th>
-                        <th>TOTAL PRICE</th>
-                    </tr>
-                </thead>
-                <tbody id="stock_body">
-                    <?php foreach ($stocks as $stock): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($stock['id']) ?></td>
-                            <td><?= htmlspecialchars($stock['created_at']) ?></td>
-                            <td><?= htmlspecialchars($stock['name']) ?></td>
-                            <td><?= htmlspecialchars($stock['category_name']) ?></td>
-                            <td><?= htmlspecialchars($stock['description']) ?></td>
-                            <td><?= htmlspecialchars($stock['unit_of_measure']) ?></td>
-                            <td><?= htmlspecialchars($stock['quantity']) ?></td>
-                            <td><?= htmlspecialchars($stock['price_per_unit']) ?></td>
-                            <td><?= htmlspecialchars($stock['total_price']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table class="table table-striped table-hover">
+        <thead class="table-grey">
+            <tr>
+                <th>#</th>
+                <th>DATE</th>
+                <th>ITEM NAME</th>
+                <th>CATEGORY</th>
+                <th>DESCRIPTION</th>
+                <th>UoM</th>
+                <th>QUANTITY</th>
+                <th>PRICE/UNIT</th>
+                <th>TOTAL PRICE</th>
+                <th>ACTIONS</th> <!-- New column for Edit/Delete -->
+            </tr>
+        </thead>
+        <tbody id="stock_body">
+            <!-- table content -->
+        </tbody>
+    </table>
+</div>
 
-<!-- Fancy Add/Edit Stock Modal -->
+
+<!-- Add Stock Modal -->
 <div class="modal fade" id="stockModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg"> <!-- Enlarged for better UI -->
+    <div class="modal-dialog modal-lg">
         <div class="modal-content shadow-lg border-0 rounded-4" style="background:white; backdrop-filter: blur(10px); color: black;">
             
             <!-- Modal Header -->
             <div class="modal-header border-0">
-                <h5 class="modal-title text-uppercase fw-bold" style="letter-spacing: 1px;">
-                    <i class="fas fa-box-open text-primary"></i> Add Stock
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <h5 class="modal-title fw-bold" id="modal-title" style="letter-spacing: 1px;"> Add Stock</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal Body -->
             <div class="modal-body">
-                <form action="pages/stores/store-actions/save_stock.php" method="POST">
+                <form id="stockForm" action="pages/stores/store-actions/save_stock.php" method="POST">
                     
+                    <input type="hidden" id="stock_id" name="stock_id"> <!-- Hidden input for stock ID -->
+
                     <div class="row g-3">
-                        <!-- Date -->
                         <div class="col-md-6">
                             <label for="date" class="form-label">Date</label>
                             <input type="date" id="date" name="date" class="form-control bg-grey text-black border-1" required>
                         </div>
 
-                        <!-- Item Name -->
                         <div class="mb-3">
                             <label for="stock_item">Stock Item</label>
-                            <select id="stock_item" name="stock_item" class="form-select" required>
-                                <option value="" disabled selected>Select an item</option>
-                                <?php foreach ($stockItems as $item): ?>
-                                    <option value="<?= htmlspecialchars($item['id']) ?>">
-                                        <?= htmlspecialchars($item['name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                            <input type="text" id="stock_item" name="stock_item" class="form-control bg-grey text-black border-1" required>
                         </div>
 
-                        <!-- Category -->
                         <div class="col-md-6">
                             <label for="category_id" class="form-label">Category</label>
                             <select id="category_id" name="category_id" class="form-select bg-grey text-black border-1" required>
@@ -127,19 +108,16 @@ $stockItems = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         </div>
 
-                        <!-- Description -->
                         <div class="col-md-6">
                             <label for="description" class="form-label">Description</label>
                             <textarea id="description" name="description" class="form-control bg-grey text-black border-1" rows="2"></textarea>
                         </div>
 
-                        <!-- Quantity -->
                         <div class="col-md-6">
                             <label for="quantity" class="form-label">Quantity</label>
                             <input type="number" id="quantity" name="quantity" class="form-control bg-grey text-black border-1" required>
                         </div>
 
-                        <!-- Unit of Measure -->
                         <div class="col-md-6">
                             <label for="unit_of_measure" class="form-label">Unit of Measure</label>
                             <select id="unit_of_measure" name="unit_of_measure" class="form-select bg-grey text-black border-1" required>
@@ -152,24 +130,16 @@ $stockItems = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         </div>
 
-                        <!-- Price Per Unit -->
                         <div class="col-md-6">
                             <label for="price_per_unit" class="form-label">Price Per Unit</label>
                             <input type="number" step="0.01" id="price_per_unit" name="price_per_unit" class="form-control bg-grey text-black border-1" required>
                         </div>
 
-                        <!-- Status -->
-                        <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
-                            <select id="status" name="status" class="form-select bg-grey text-black border-1">
-                                <option value="Available">IN</option>
-                            </select>
-                        </div>
+                        <input type="hidden" id="status" name="status" value="In">
                     </div>
 
-                    <!-- Submit Button -->
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+                    <div class="mt-4 text-center">
+                        <button type="submit" class="btn btn-primary w-50 py-2 fw-bold" id="newupdate">
                             <i class="fas fa-save"></i> Save Stock
                         </button>
                     </div>
@@ -182,47 +152,37 @@ $stockItems = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-    <!-- Update Stock Modal -->
-    <div class="modal fade" id="updateStockModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Stock Quantity</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label>Item</label>
-                            <select class="form-select" required>
-                                <option value="" disabled selected>Select Item</option>
-                                <?php foreach ($stocks_available as $item): ?>
-                                    <option value="<?= htmlspecialchars($item['id']) ?>">
-                                        <?= htmlspecialchars($item['name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label>Quantity</label>
-                            <input type="number" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label>Operation</label>
-                            <select class="form-select" required>
-                                <option value="add">Add</option>
-                                <option value="subtract">Subtract</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-success w-100">Update Stock</button>
-                    </form>
-                </div>
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header text-black">
+                <h5 class="modal-title" id="addCategoryModalLabel"></> Add Stock Category</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="pages/stores/store-actions/add_category.php" method="POST">
+                    
+                    <!-- Category Name -->
+                    <div class="mb-3">
+                        <label for="category_name" class="form-label fw-bold">Category Name</label>
+                        <input type="text" id="category_name" name="category_name" class="form-control shadow-sm" placeholder="Enter category name" required>
+                    </div>
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-outline-primary w-50">
+                            <i class="bi bi-save"></i> Save Category
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
     
 <!-- js for the above is in stores.js -->
 
 <script src="store.js"></script>
+<script src="assets/js/stock-management.js" defer></script>
 

@@ -2,10 +2,10 @@
     <h2 class="text-center mb-4">Inventory</h2>
 
     <div class="d-flex justify-content-between">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#inventoryModal">+ Add Inventory</button>
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#inventoryModal">+ Add Inventory</button>
         <form action="pages/stores/store-actions/import_inventory.php" method="post" enctype="multipart/form-data" class="d-flex align-items-center">
             <input type="file" name="excelFile" accept=".xlsx, .xls" class="form-control me-2" required>
-            <button type="submit" class="btn btn-primary">📥 Upload & Import</button>
+            <button type="submit" class="btn btn-outline-primary">📥 Upload & Import</button>
         </form>
     </div>
 
@@ -35,19 +35,21 @@
     </div>
 </div>
 
-<!-- Add/Edit Inventory Modal -->
+<!-- Add Inventory Modal -->
 <div class="modal fade" id="inventoryModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content shadow-lg rounded-4">
             <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="modalTitle">📋 Add Inventory</h5>
+                <h5 class="modal-title fw-bold" id="modalTitle">Add Inventory</h5>
                 <span class="close-x" data-bs-dismiss="modal" aria-label="Close">×</span>
             </div>
             <div class="modal-body p-4">
                 <form id="inventoryForm" onsubmit="submitInventory(event)">
                     <div class="row g-3">
+                        <input type="hidden" id="inventory_id" name="inventory_id">
+
                         <div class="col-md-6">
-                            <label for="date" class="form-label fw-semibold">📅 Date:</label>
+                            <label for="date" class="form-label fw-semibold">Date:</label>
                             <input type="date" class="form-control" id="date" name="date" required>
                         </div>
 
@@ -94,7 +96,7 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">✅ Save Inventory</button>
+                        <button id="newupdate" type="submit" class="btn btn-outline-primary w-100 py-2 fw-bold">Save Inventory</button>
                     </div>
                 </form>
             </div>

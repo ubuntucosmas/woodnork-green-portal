@@ -1,0 +1,12 @@
+Array
+(
+    [inventory_id] => 
+    [date] => 2025-02-25
+    [make] => Dell
+    [model] => 1234qwe
+    [serial] => 1234567qwerty
+    [specs] => 7th gen
+    [user] => Cosmas
+    [cost] => 10
+    [condition] => Good
+)

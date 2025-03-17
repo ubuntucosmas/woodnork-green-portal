@@ -1,6 +1,6 @@
 <aside class="sidebar" id="sidebar">
   <div class="logo-container">
-    <img src="assets/images/logo.png" alt="Company Logo" class="company-logo">
+    <img src="assets/images/logo3.png" alt="Company Logo" class="company-logo">
   </div>
   <nav class="nav-menu">
     <ul id="sidebar-menu">
@@ -41,58 +41,6 @@
     </ul>
   </nav>
 </aside>
-
-<style>
-  body {
-    font-family: 'Poppins', sans-serif;
-  }
-  .sidebar {
-    width: 250px;
-    height: 100vh;
-    background: linear-gradient(to bottom, #2e3b4e, #145da0);
-    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3);
-    padding: 20px;
-    color: white;
-    position: fixed;
-    transition: 0.3s ease-in-out;
-  }
-  .logo-container {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .company-logo {
-    width: 100px;
-    border-radius: 50%;
-  }
-  .nav-menu ul {
-    list-style: none;
-    padding: 0;
-  }
-  .nav-menu li {
-    margin: 10px 0;
-  }
-  .nav-menu a {
-    display: flex;
-    align-items: center;
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 10px;
-    transition: background 0.3s, transform 0.2s;
-  }
-  .nav-menu a i {
-    font-size: 18px;
-    margin-right: 10px;
-    transition: color 0.3s;
-  }
-  .nav-menu a:hover {
-    background: rgba(0, 255, 255, 0.2);
-    transform: scale(1.05);
-  }
-  .nav-menu a:hover i {
-    color: cyan;
-  }
-</style>
 
 <!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">

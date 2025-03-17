@@ -3,28 +3,21 @@
 function submitInventory(event) {
     event.preventDefault(); // Prevent default form submission
 
-    // Collect form data
-    let formData = new FormData(document.getElementById("inventoryForm"));
+    let form = document.getElementById("inventoryForm");
+    let formData = new FormData(form);
+    
+    let inventoryId = document.getElementById("inventory_id").value; 
+    let url = inventoryId ? `pages/stores/store-actions/update_inventory.php` : `pages/stores/store-actions/submit_inventory.php`; // Update if ID exists
 
-    // Send data to PHP using AJAX
-    fetch("pages/stores/store-actions/submit_inventory.php", {
+    fetch(url, {
         method: "POST",
         body: formData
     })
-    .then(response => response.json()) // Convert response to JSON
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert("Inventory added successfully!");
-            // Close the modal
-            let modal = document.getElementById("inventoryModal");
-            modal.style.display = "none";
-
-            document.getElementById("inventoryForm").reset(); // Clear form
-
-            // Reload page to update inventory list (Optional)
-            location.reload();
-
-            
+            alert("Inventory saved successfully!");
+            location.reload(); // Reload to reflect changes
         } else {
             alert("Error: " + data.message);
         }
@@ -34,8 +27,10 @@ function submitInventory(event) {
 
 // Loading data from inventory table to the inventory table on the frontend
 document.addEventListener("DOMContentLoaded", function () {
-    setInterval(loadInventory, 1600);
+    console.log("DOM loaded, calling loadInventory()...");
+    loadInventory();
 });
+
 
 function loadInventory() {
     fetch("pages/stores/store-actions/fetch_inventory.php")
@@ -59,10 +54,10 @@ function loadInventory() {
                             <td>${item.cost}</td>
                             <td>${item.cond}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm" onclick="editInventory(${item.id})">
+                                <button class="btn btn-outline-primary btn-sm" onclick="editInventory(${item.id})">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteInventory(${item.id})">
+                                <button class="btn btn-outline-danger btn-sm" onclick="deleteInventory(${item.id})">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -84,12 +79,19 @@ function editInventory(id) {
     console.log("Edit button clicked for ID:", id); // Debugging
 
     fetch(`pages/stores/store-actions/edit_inventory.php?id=${id}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            console.log("Received Data:", data); // Debugging
+            
 
             if (data.success && data.data) {
+                console.log("Received Data:", data); // Debugging
                 let item = data.data;
+                console.log("Received Data:", item.make); // Debugging
 
                 document.getElementById("date").value = item.date || "";
                 document.getElementById("make").value = item.make || "";
@@ -101,12 +103,14 @@ function editInventory(id) {
                 document.getElementById("condition").value = item.cond || "";
 
                 document.getElementById("modalTitle").innerText = "Edit Inventory";
+                document.getElementById("newupdate").innerText = "Update Inventory";
 
-                // Store item ID properly
-                // document.getElementById("inventoryId").value = id;
+                // ✅ Store the inventory ID properly in a hidden field
+                document.getElementById("inventory_id").value = id;
 
-                // Show the modal
-                let modal = new bootstrap.Modal(document.getElementById("inventoryModal"));
+                // ✅ Ensure modal is properly initialized and shown
+                let modalElement = document.getElementById("inventoryModal");
+                let modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
                 modal.show();
             } else {
                 alert("Error: Inventory item not found.");
@@ -117,39 +121,6 @@ function editInventory(id) {
             alert("Failed to load inventory details. Please try again.");
         });
 }
-
-//JavaScript to pass the inventory ID when submitting the form
-
-document.getElementById("inventoryForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const inventoryId = document.getElementById("inventory_id").value;
-    const formData = new FormData(document.getElementById("inventoryForm"));
-
-    let url = inventoryId ? `pages/stores/store-actions/edit_inventory.php?id=${inventoryId}` : "add_inventory.php";
-    let method = inventoryId ? "PUT" : "POST";
-
-    fetch(url, {
-        method: method,
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(data.message);
-            document.getElementById("inventoryForm").reset();
-            document.getElementById("inventory_id").value = ""; // Reset hidden input
-            loadInventory(); // Reload table
-            let modal = bootstrap.Modal.getInstance(document.getElementById("inventoryModal"));
-            modal.hide();
-        } else {
-            alert("Error: " + data.message);
-        }
-    })
-    .catch(error => console.error("Error:", error));
-});
-
-
 
 
 // Function to handle deleting an inventory item

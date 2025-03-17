@@ -22,7 +22,7 @@ $stock_result = $conn->query($stock_query);
     <h2 class="mb-3">Stock Allocation</h2>
 
     <!-- Dispatch Button -->
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#dispatchModal">Dispatch Stock</button>
+    <button class="btn btn-outline-primary mb-3" data-bs-toggle="modal" data-bs-target="#dispatchModal">Dispatch Stock</button>
 
     <!-- Dispatch Table -->
     <div class="table-responsive">
@@ -82,7 +82,7 @@ $stock_result = $conn->query($stock_query);
                     <span class="close-btn" data-bs-dismiss="modal">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <form action="pages/stores/store-actions/dispatch_process.php" method="POST">
+                    <form id="dispatch_form" action="pages/stores/store-actions/dispatch_process.php" method="POST">
                         <label>Date:</label>
                         <input type="date" name="dispatch_date" class="form-control" required>
 
@@ -117,6 +117,25 @@ $stock_result = $conn->query($stock_query);
             </div>
         </div>
     </div>
+
+    <!-- Modal for Receipt -->
+<div id="receiptModal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dispatch Receipt</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="receipt_content">
+                <!-- Receipt details will be added here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button id="print_receipt" class="btn btn-secondary">Print Receipt</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 function openModal(modalId) {

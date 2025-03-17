@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     stockForm.reset(); // Clear form fields
                     fetchStockData(); // Refresh data dynamically
                     closeStockModal(); // Close the modal after successful submission
+                    location.reload();
 
                 })
                 .catch(error => console.error("Error:", error));
@@ -248,42 +249,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-// for fetching low stock data
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("lowStockTrigger").addEventListener("click", function () {
-        fetch("pages/stores/store-actions/fetch_low_stock.php") // Replace with actual PHP file path
-            .then(response => response.json())
+        fetch("pages/stores/store-actions/low_stock_alert_fetch.php")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
             .then(data => {
-                console.log("Received Data:", data); //for debuging
                 let tableBody = document.getElementById("lowStockTableBody");
-                tableBody.innerHTML = ""; // Clear previous data
+                tableBody.innerHTML = ""; // Clear existing rows
 
-                if (data.low_stock_items.length > 0) {
-                    data.low_stock_items.forEach(item => {
-                        tableBody.innerHTML += `
+                if (data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No low stock items found.</td></tr>';
+                } else {
+                    data.forEach(item => {
+                        let row = `
                             <tr>
-                                <td>${item.id}</td>
-                                <td>${item.item_name}</td>
+                                <td>${item.name}</td>
                                 <td>${item.category_id}</td>
                                 <td>${item.description}</td>
                                 <td>${item.quantity}</td>
                                 <td>${item.unit_of_measure}</td>
                                 <td>${item.price_per_unit}</td>
                                 <td>${item.total_price}</td>
-                                <td>${item.status}</td>
-                                <td>${item.created_at}</td>
                             </tr>
                         `;
+                        tableBody.innerHTML += row;
                     });
-
-                    // Show the Bootstrap modal
-                    new bootstrap.Modal(document.getElementById("lowStockModal")).show();
-                } else {
-                    alert("No low stock items found.");
                 }
             })
-            .catch(error => console.error("Error fetching low stock data:", error));
+            .catch(error => {
+                console.error("Error fetching low stock items:", error);
+                alert("Failed to fetch low stock items.");
+            });
     });
 });
+
+
 
 

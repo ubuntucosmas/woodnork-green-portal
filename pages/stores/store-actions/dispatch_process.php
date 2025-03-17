@@ -1,118 +1,79 @@
 <?php
+session_start();
+
 // Database connection
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "root"; // Change if necessary
+$password = ""; // Change if necessary
 $dbname = "portal_db";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+try {
+    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
 }
 
-// Fetch and sanitize input data
-// $stock_id = intval($_POST['stock_id']);
-// $project = $conn->real_escape_string($_POST['project']);
-// $destination = $conn->real_escape_string($_POST['destination']);
-// $quantity = intval($_POST['quantity']);
-// $dispatch_date = $conn->real_escape_string($_POST['dispatch_date']);
-// $receiver = $conn->real_escape_string($_POST['receiver']);
-// $dispatcher = $conn->real_escape_string($_POST['dispatcher']);
-// $status = $conn->real_escape_string($_POST['status']);
+// Ensure the request is POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $dispatch_id = $_POST['dispatch_id'] ?? uniqid();
+    $project_name = $_POST['project_name'] ?? 'N/A';
+    $destination = $_POST['destination'] ?? 'N/A';
+    $dispatcher = $_POST['dispatcher'] ?? 'N/A';
+    $receiver = $_POST['receiver'] ?? 'N/A';
 
-// // Check if the stock item exists and fetch current quantity
-// $stock_query = "SELECT quantity FROM stock WHERE id = $stock_id";
-// $stock_result = $conn->query($stock_query);
+    // Validate and process items and quantities
+    $items = $_POST['items'] ?? [];
+    $quantities = $_POST['quantities'] ?? [];
 
-// if ($stock_result->num_rows > 0) {
-//     $stock = $stock_result->fetch_assoc();
-//     $current_quantity = $stock['quantity'];
-
-//     if ($current_quantity >= $quantity) {
-//         // Deduct the dispatched quantity from the stock
-//         $new_quantity = $current_quantity - $quantity;
-//         $update_query = "UPDATE stock SET quantity = $new_quantity WHERE id = $stock_id";
-
-//         if ($conn->query($update_query) === TRUE) {
-//             // Insert into dispatches table
-//             $dispatch_query = "INSERT INTO dispatches (stock_id, project, destination, quantity, dispatch_date, receiver, dispatcher, status)
-//                                VALUES ($stock_id, '$project', '$destination', $quantity, '$dispatch_date', '$receiver', '$dispatcher', '$status')";
-
-//             if ($conn->query($dispatch_query) === TRUE) {
-//                 // Insert into transactions table
-//                 $transaction_query = "INSERT INTO transactions (stock_id, project, destination, quantity, dispatch_date, receiver, dispatcher, status)
-//                                       VALUES ($stock_id, '$project', '$destination', $quantity, '$dispatch_date', '$receiver', '$dispatcher', '$status')";
-
-//                 if ($conn->query($transaction_query) === TRUE) {
-//                     echo "Stock dispatched successfully and recorded in transactions.";
-//                     // header("Location: dashboard.php");
-//                     exit();
-//                 } else {
-//                     echo "Error inserting into transactions: " . $conn->error;
-//                 }
-//             } else {
-//                 echo "Error inserting into dispatches: " . $conn->error;
-//             }
-//         } else {
-//             echo "Error updating stock: " . $conn->error;
-//         }
-//     } else {
-//         echo "Insufficient stock quantity.";
-//     }
-// } else {
-//     echo "Stock item not found.";
-// }
-
-// // Close the database connection
-// $conn->close();
-
-
-// Retrieve form data
-$dispatch_date = $_POST['dispatch_date'];
-$project_name = $_POST['project_name'];
-$destination = $_POST['destination'];
-$dispatcher = $_POST['dispatcher'];
-$receiver = $_POST['receiver'];
-$items = $_POST['items']; // Array of stock item IDs
-$quantities = $_POST['quantities']; // Array of quantities
-
-// Start Transaction
-$conn->begin_transaction();
-try {
-    // Loop through each dispatched item
-    for ($i = 0; $i < count($items); $i++) {
-        $stock_id = $items[$i];
-        $quantity = $quantities[$i];
-
-        // Check if stock is available
-        $stock_check = $conn->query("SELECT quantity FROM stock WHERE id = $stock_id");
-        $stock_row = $stock_check->fetch_assoc();
-        if (!$stock_row || $stock_row['quantity'] < $quantity) {
-            throw new Exception("Insufficient stock for item ID: $stock_id");
-        }
-
-        // Insert dispatch record
-        $stmt = $conn->prepare("INSERT INTO dispatches (stock_id, project, destination, quantity, dispatch_date, receiver, dispatcher, status) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, 'Out')");
-        $stmt->bind_param("ississs", $stock_id, $project_name, $destination, $quantity, $dispatch_date, $receiver, $dispatcher);
-        $stmt->execute();
-
-        // Subtract dispatched stock from available stock
-        $conn->query("UPDATE stock SET quantity = quantity - $quantity WHERE id = $stock_id");
+    if (!is_array($items) || !is_array($quantities) || count($items) !== count($quantities)) {
+        die("Invalid item or quantity data.");
     }
 
-    // Commit transaction if everything is successful
-    $conn->commit();
-   // Redirecting user to dashboard.php with a page parameter
-header("Location: http://localhost/woodnork-green-portal/dashboard.php?page=stock_allocation");
-} catch (Exception $e) {
-    // Rollback transaction on failure
-    $conn->rollback();
-    echo "<script>alert('Error: " . $e->getMessage() . "'); window.location.href='index.php';</script>";
-}
+    try {
+        $pdo->beginTransaction(); // Start transaction
 
-// Close connection
-$conn->close();
+        // Prepare statements
+        $updateStockStmt = $pdo->prepare("UPDATE stock SET quantity = quantity - ? WHERE id = ? AND quantity >= ?");
+        $insertDispatchStmt = $pdo->prepare("INSERT INTO dispatches (dispatch_id, stock_id, project, destination, quantity, dispatch_date, receiver, dispatcher, status) 
+                                             VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, 'Out')");
+
+        foreach ($items as $index => $stock_id) {
+            $quantity = (int)$quantities[$index];
+
+            // Check stock availability
+            $checkStockStmt = $pdo->prepare("SELECT quantity FROM stock WHERE id = ?");
+            $checkStockStmt->execute([$stock_id]);
+            $stockData = $checkStockStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$stockData || $stockData['quantity'] < $quantity) {
+                throw new Exception("Insufficient stock for item ID: $stock_id");
+            }
+
+            // Reduce stock quantity
+            $updateStockStmt->execute([$quantity, $stock_id, $quantity]);
+
+            // Insert into dispatches table
+            $insertDispatchStmt->execute([$dispatch_id, $stock_id, $project_name, $destination, $quantity, $receiver, $dispatcher]);
+        }
+
+        $pdo->commit(); // Commit transaction
+
+        // Convert arrays to JSON for passing via URL
+        $items_json = json_encode($items);
+        $quantities_json = json_encode($quantities);
+
+        // Redirect to receipt generation
+        header("Location: generate_receipt.php?dispatch_id=$dispatch_id&project_name=" . urlencode($project_name) .
+            "&destination=" . urlencode($destination) . "&dispatcher=" . urlencode($dispatcher) .
+            "&receiver=" . urlencode($receiver) . "&items=" . urlencode($items_json) .
+            "&quantities=" . urlencode($quantities_json));
+        exit();
+    } catch (Exception $e) {
+        $pdo->rollBack(); // Rollback transaction on error
+        die("Error processing dispatch: " . $e->getMessage());
+    }
+} else {
+    die("Invalid request method.");
+}
 ?>
