@@ -68,10 +68,7 @@ function loadInventory() {
                 inventoryBody.innerHTML = "<tr><td colspan='10'>No inventory data available</td></tr>";
             }
         })
-        .catch(error => {
-            console.error("Error fetching inventory:", error);
-            inventoryBody.innerHTML = "<tr><td colspan='10'>Failed to load inventory data</td></tr>";
-        });
+
 }
 
 // Function to handle editing an inventory item

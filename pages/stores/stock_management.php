@@ -35,9 +35,8 @@ $stockItems = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
         <h2 class="text-center">Stock Management</h2>
         
         <div class="d-flex justify-content-between my-3">
-            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#stockModal">Update Stock</button>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">+ Add Stock Category</button>
             <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">+ Add Stock Category</button>
                 <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#stockModal">+ Add New Stock</button>
             </div>
         </div>

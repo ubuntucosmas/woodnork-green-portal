@@ -21,6 +21,30 @@ $stock_result = $conn->query($stock_query);
 <div class="container mt-4">
     <h2 class="mb-3">Stock Allocation</h2>
 
+    <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h4 class="text-center text-primary mb-4">Search Dispatch Record</h4>
+                    <form id="dispatchesForm">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary text-white">
+                                <i class="fas fa-truck"></i>
+                            </span>
+                            <input type="text" name="dispatch_id" class="form-control" placeholder="Enter Dispatch ID" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="resultsContainer" class="mt-4"></div> <!-- Results will appear here -->
+    
     <!-- Dispatch Button -->
     <button class="btn btn-outline-primary mb-3" data-bs-toggle="modal" data-bs-target="#dispatchModal">Dispatch Stock</button>
 
@@ -36,14 +60,15 @@ $stock_result = $conn->query($stock_query);
                     <th>Destination</th>
                     <th>Quantity</th>
                     <th>Date</th>
-                    <th>Receiver</th>
-                    <th>Dispatcher</th>
+                    <th>Received By</th>
+                    <th>Issued By</th>
                     <th>Status</th>
+                    <th>Dispatch IDs</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $dispatch_query = "SELECT d.id, s.name AS item_name, d.project, d.destination, d.quantity, d.dispatch_date, d.receiver, d.dispatcher, d.status 
+                $dispatch_query = "SELECT d.id, s.name AS item_name, d.project, d.destination, d.quantity, d.dispatch_date, d.receiver, d.dispatcher, d.status, d.dispatch_id 
                                    FROM dispatches d 
                                    JOIN stock s ON d.stock_id = s.id 
                                    ORDER BY d.dispatch_date DESC";
@@ -61,6 +86,7 @@ $stock_result = $conn->query($stock_query);
                                 <td>{$row['receiver']}</td>
                                 <td>{$row['dispatcher']}</td>
                                 <td>{$row['status']}</td>
+                                <td>{$row['dispatch_id']}</td>
                               </tr>";
                     }
                 } else {
@@ -92,10 +118,10 @@ $stock_result = $conn->query($stock_query);
                         <label>Destination:</label>
                         <input type="text" name="destination" class="form-control" required>
 
-                        <label>Dispatcher:</label>
+                        <label>Issued By:</label>
                         <input type="text" name="dispatcher" class="form-control" required>
 
-                        <label>Receiver:</label>
+                        <label>Received By:</label>
                         <input type="text" name="receiver" class="form-control" required>
 
                         <div id="stock_items">
@@ -118,24 +144,6 @@ $stock_result = $conn->query($stock_query);
         </div>
     </div>
 
-    <!-- Modal for Receipt -->
-<div id="receiptModal" class="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Dispatch Receipt</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body" id="receipt_content">
-                <!-- Receipt details will be added here dynamically -->
-            </div>
-            <div class="modal-footer">
-                <button id="print_receipt" class="btn btn-secondary">Print Receipt</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
 function openModal(modalId) {
@@ -146,5 +154,6 @@ function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
 }
 </script>
+<script src="assets/js/dispatches.js" defer></script>
 
 
