@@ -1,8 +1,40 @@
+// Function to submit or update stock data
+function submitStock(e) {
+    e.preventDefault(); // Prevent default form submission
+
+    let formData = new FormData(document.getElementById("stockForm"));
+
+    fetch("pages/stores/store-actions/save_stock.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        console.log("Fetch request completed, checking response..."); 
+        return response.text(); // Read response as text for debugging
+    })
+    .then(data => {
+        console.log("📜 Server Response:", data); // Log server response
+        
+        if (data.includes("Success")) {  // Ensure the response contains "Success"
+            alert("Stock item successfully saved!");  
+            console.log("🔄 Reloading page...");
+            window.location.href = window.location.href; // ✅ Alternative reload method
+        } else {
+            console.error("⚠️ Unexpected response:", data);
+            alert("Error: " + data);
+        }
+    })
+    .catch(error => {
+        console.error("Fetch request failed:", error);
+    });
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM loaded, calling loadStock()...");
+    console.log("DOM loaded, calling loadInventory()...");
     loadStockdata();
 });
-
 // Function to load stock data into the table
 function loadStockdata() {
     fetch("pages/stores/store-actions/get_stock_details.php")
@@ -47,38 +79,6 @@ function loadStockdata() {
             stockBody.innerHTML = "<tr><td colspan='9'>Failed to load stock data</td></tr>";
         });
 }
-
-// Function to submit or update stock data
-document.getElementById("stockForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    let formData = new FormData(this);
-
-    fetch("pages/stores/store-actions/save_stock.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // ✅ Show success message
-            alert("Stock item successfully saved!");
-
-            // ✅ Close modal
-            let modalElement = document.getElementById("stockModal");
-            let modalInstance = bootstrap.Modal.getInstance(modalElement);
-            if (modalInstance) {
-                modalInstance.hide();
-            }
-
-            // ✅ Wait for modal animation to complete before reloading
-            setTimeout(() => {
-                window.location.reload();
-            }, 500); // Adjust timeout if needed
-        }
-    })
-    .catch(error => console.error("Stock submission failed:", error));
-});
 
 
 // Function to edit stock details

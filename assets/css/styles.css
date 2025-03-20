@@ -20,13 +20,6 @@ body {
   height: auto;
 }
 
-/* Title styling */
-h1 {
-  font-size: 32px; /* Adjust size as needed */
-  font-weight: 350;
-  color: #0badd3; /* Blue from company colors */
-  margin-bottom: 30px; /* Space between title and dashboard */
-}
 
 main {
   width: 45%;

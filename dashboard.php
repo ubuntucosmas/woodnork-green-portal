@@ -56,6 +56,7 @@ $moduleFile = "modules/" . strtolower($department) . "_module.php";
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/dashboard.css">
+  <link rel="stylesheet" href="assets/css/dispatch.css">
   <link rel="stylesheet" href="assets/css/stores.css">
   <link rel="stylesheet" href="assets/css/report.css">
   <link rel="stylesheet" href="assets/css/inventory.css">

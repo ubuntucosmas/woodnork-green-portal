@@ -23,6 +23,12 @@ try {
 
         // Skip header row and insert into the database
         for ($i = 1; $i < count($data); $i++) {
+            // Convert Excel date format if it's a numeric value
+            if (is_numeric($data[$i][0])) {
+                $date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($data[$i][0])->format('Y-m-d');
+            } else {
+                $date = date('Y-m-d', strtotime($data[$i][0])); // Convert standard date format
+            }
             $date = $data[$i][0];
             $make = $data[$i][1];
             $model = $data[$i][2];

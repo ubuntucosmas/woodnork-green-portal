@@ -48,16 +48,34 @@ try {
 </div>
 
 
-    <div class="filter-section">
-        <input type="text" id="search_item" placeholder="Search by Item">
-        <select id="filter_type">
-            <option value="">All Types</option>
-            <option value="in">IN</option>
-            <option value="out">OUT</option>
-        </select>
-        <input type="date" id="filter_date">
-        <button onclick="loadSearchData()">Apply Filters</button>
+<div class="container mt-3">
+    <div class="row g-2 align-items-center">
+        <!-- Search Input -->
+        <div class="col-md-4">
+            <input type="text" id="search_item" class="form-control" placeholder="Search by Item">
+        </div>
+
+        <!-- Filter Type Dropdown -->
+        <div class="col-md-3">
+            <select id="filter_type" class="form-select">
+                <option value="">All Types</option>
+                <option value="in">IN</option>
+                <option value="out">OUT</option>
+            </select>
+        </div>
+
+        <!-- Date Picker -->
+        <div class="col-md-3">
+            <input type="date" id="filter_date" class="form-control">
+        </div>
+
+        <!-- Apply Filters Button -->
+        <div class="col-md-2">
+            <button class="btn btn-outline-primary w-100" onclick="loadSearchData()">Apply Filters</button>
+        </div>
     </div>
+</div>
+
 
     <h3 class="text-center mb-4">Recent Transactions</h3>
 

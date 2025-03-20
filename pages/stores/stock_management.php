@@ -80,7 +80,7 @@ $stockItems = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
 
             <!-- Modal Body -->
             <div class="modal-body">
-                <form id="stockForm" action="pages/stores/store-actions/save_stock.php" method="POST">
+                <form id="stockForm" onsubmit="submitStock(e)">
                     
                     <input type="hidden" id="stock_id" name="stock_id"> <!-- Hidden input for stock ID -->
 
@@ -156,7 +156,7 @@ $stockItems = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header text-black">
-                <h5 class="modal-title" id="addCategoryModalLabel"></> Add Stock Category</h5>
+                <h5 class="modal-title" id="addCategoryModalLabel"></> Stock Category</h5>
                 <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
