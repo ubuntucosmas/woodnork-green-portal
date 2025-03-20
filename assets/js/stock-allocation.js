@@ -1,5 +1,4 @@
-
-// js for selecting multiple items of the dispatch form
+// JavaScript for selecting multiple items in the dispatch form
 document.addEventListener("DOMContentLoaded", function () {
     $(document).on("click", "#add_item", function () {
         $.ajax({
@@ -32,35 +31,41 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Remove item field dynamically
-$(document).on("click", ".remove-item", function () {
-    $(this).closest(".item-group").remove();
-});
+    $(document).on("click", ".remove-item", function () {
+        $(this).closest(".item-group").remove();
+    });
 
+    // Form submission
+    document.getElementById("dispatch_form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent default form submission
 
+        // Open receipt in a new full-page window
+        const formAction = this.action + "?" + new URLSearchParams(new FormData(this)).toString();
+        window.open(formAction, "_blank", "noopener,noreferrer");
 
-document.getElementById("dispatch_form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent default form submission
+        // Delay reloading stock_allocation.php for 2 seconds
+        setTimeout(() => {
+            window.location.href = "stock_allocation.php";
+        }, 2000);
+    });
 
-    // Open receipt in a new full-page window
-    const formAction = this.action + "?" + new URLSearchParams(new FormData(this)).toString();
-    window.open(formAction, "_blank", "noopener,noreferrer");
+    // MutationObserver to watch for changes in stock_items div
+    const stockItemsContainer = document.getElementById("stock_items");
 
-    // Delay reloading stock_allocation.php for 2 seconds
-    setTimeout(() => {
-        window.location.href = "stock_allocation.php";
-    }, 2);
-});
-nt
-
-    function loadStockAllocation() {
-        window.location.href = "stock_allocation.php"; // Adjust based on your actual stock allocation page
+    // MutationObserver callback function
+    function handleMutations(mutationsList, observer) {
+        mutationsList.forEach(mutation => {
+            if (mutation.type === "childList") {
+                console.log("Stock items list changed!");
+                // Perform any action needed when stock items are added or removed
+            }
+        });
     }
-    
+
+    // Create an observer instance
+    const observer = new MutationObserver(handleMutations);
+
+    // Start observing the stockItemsContainer for changes
+    observer.observe(stockItemsContainer, { childList: true });
+
 });
-
-
-
-
-
-
-

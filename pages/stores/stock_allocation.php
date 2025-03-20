@@ -20,31 +20,30 @@ $stock_result = $conn->query($stock_query);
 
 <div class="container mt-4">
     <h2 class="mb-3">Stock Allocation</h2>
-
     <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg border-0">
-                <div class="card-body">
-                    <h4 class="text-center text-primary mb-4">Search Dispatch Record</h4>
-                    <form id="dispatchesForm">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text bg-primary text-white">
-                                <i class="fas fa-truck"></i>
-                            </span>
-                            <input type="text" name="dispatch_id" class="form-control" placeholder="Enter Dispatch ID" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                    </form>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body">
+                        <h4 class="text-center text-primary mb-4">Search Dispatch Record</h4>
+                        <form id="dispatchesForm">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text bg-primary text-white"><i class="fas fa-truck"></i></span>
+                                <input type="text" name="dispatch_id" class="form-control" placeholder="Enter Dispatch ID" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Search</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div id="resultsContainer" class="mt-4"></div>
+    <div id="receiptContainer" class="mt-4" style="display: none;"></div>
 </div>
-    <div id="resultsContainer" class="mt-4"></div> <!-- Results will appear here -->
-    
+
+<!-- Updated CSS -->
+
     <!-- Dispatch Button -->
     <button class="btn btn-outline-primary mb-3" data-bs-toggle="modal" data-bs-target="#dispatchModal">Dispatch Stock</button>
 
@@ -137,7 +136,7 @@ $stock_result = $conn->query($stock_query);
                             </div>
                         </div>
                         <button type="button" id="add_item" class="btn btn-secondary mt-2">Add More Items</button>
-                        <button type="submit" class="btn btn-primary mt-3 w-100">Submit</button>
+                        <button type="submit" class="btn btn-outline-primary mt-3 w-100">Submit</button>
                     </form>
                 </div>
             </div>

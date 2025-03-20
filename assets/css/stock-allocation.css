@@ -25,3 +25,113 @@
     align-items: center;
     margin-top: 10px;
 }
+
+
+
+
+
+
+
+
+    #resultsContainer .table, #receiptContainer .table {
+        width: 100%;
+        table-layout: auto;
+        font-size: 0.9rem;
+        border-collapse: collapse;
+    }
+    #resultsContainer .table th, #resultsContainer .table td,
+    #receiptContainer .table th, #receiptContainer .table td {
+        white-space: nowrap;
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+        color: #333;
+    }
+    #resultsContainer .table-responsive {
+        overflow-x: hidden;
+    }
+    #receiptContainer {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        display: none;
+    }
+    #receiptContainer h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    @media print {
+        /* Reset everything */
+        html, body {
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+            overflow: visible !important;
+        }
+        /* Hide everything except receiptContainer */
+        body * {
+            display: none !important;
+        }
+        #receiptContainer {
+            display: block !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 10mm !important;
+            border: none !important;
+            box-shadow: none !important;
+            background: #fff !important;
+            visibility: visible !important;
+            z-index: 9999 !important;
+        }
+        #receiptContainer h3 {
+            display: block !important;
+            text-align: center !important;
+            color: #000 !important;
+            font-size: 16pt !important;
+            margin: 0 0 10mm 0 !important;
+            padding: 0 !important;
+            visibility: visible !important;
+        }
+        #receiptContainer table {
+            display: table !important;
+            width: 100% !important;
+            border-collapse: collapse !important;
+            visibility: visible !important;
+        }
+        #receiptContainer thead {
+            display: table-header-group !important;
+            visibility: visible !important;
+        }
+        #receiptContainer tbody {
+            display: table-row-group !important;
+            visibility: visible !important;
+        }
+        #receiptContainer tr {
+            display: table-row !important;
+            visibility: visible !important;
+        }
+        #receiptContainer th, #receiptContainer td {
+            display: table-cell !important;
+            border: 1px solid #000 !important;
+            padding: 5mm !important;
+            color: #000 !important;
+            font-size: 12pt !important;
+            vertical-align: middle !important;
+            visibility: visible !important;
+        }
+        #receiptContainer .no-print {
+            display: none !important;
+        }
+    }

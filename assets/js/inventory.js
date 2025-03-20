@@ -107,7 +107,7 @@ function editInventory(id) {
 
                 // ✅ Ensure modal is properly initialized and shown
                 let modalElement = document.getElementById("inventoryModal");
-                let modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+                let modal = new bootstrap.Modal(modalElement);
                 modal.show();
             } else {
                 alert("Error: Inventory item not found.");
